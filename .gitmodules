@@ -1,0 +1,15 @@
+[submodule "ps/ps0"]
+	path = ps/ps0
+	url = git@github.com:sbwcwso/sc-ps0.git
+[submodule "ps/ps1"]
+	path = ps/ps1
+	url = git@github.com:sbwcwso/sc-ps1.git
+[submodule "example/ex18-intexpr"]
+	path = example/ex18-intexpr
+	url = git@github.com:sbwcwso/sc-ex18-intexpr.git
+[submodule "example/ex19-matrixmul"]
+	path = example/ex19-matrixmul
+	url = git@github.com:sbwcwso/sc-ex19-matrixmul.git
+[submodule "ps/ps2"]
+	path = ps/ps2
+	url = git@github.com:sbwcwso/sc-ps2.git
