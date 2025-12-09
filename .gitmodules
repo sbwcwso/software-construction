@@ -13,3 +13,6 @@
 [submodule "ps/ps2"]
 	path = ps/ps2
 	url = git@github.com:sbwcwso/sc-ps2.git
+[submodule "example/ex22-editor"]
+	path = example/ex22-editor
+	url = git@github.com:sbwcwso/sc-ex22-editor.git
