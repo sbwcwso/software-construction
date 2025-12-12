@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/getting-started/eclipse.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:30 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    Eclipse FAQ
+   </title>
+   <link href="../web/handout-style.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="../index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#eclipse_faq">
+      Eclipse FAQ
+     </a>
+    </li>
+    <li>
+     <a href="#resources">
+      Resources
+     </a>
+    </li>
+    <li>
+     <a href="#faq">
+      FAQ
+     </a>
+    </li>
+    <li>
+     <a href="#tips_tricks">
+      Tips &amp; Tricks
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="eclipse_faq">
+    Eclipse FAQ
+   </h1>
+   <div data-outline="eclipse_faq">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <h2 id="resources">
+      Resources
+     </h2>
+     <div data-outline="resources">
+      <p>
+       <a href="http://www.vogella.com/tutorials/EclipseDebugging/article.html">
+        <strong>
+         Java Debugging with Eclipse
+        </strong>
+       </a>
+       introduces Eclipse’s debug mode, a recommended tool for tracking down bugs using breakpoints.
+This step-by-step tutorial explains the
+       <em>
+        Debug perspective
+       </em>
+       and provides screenshots to decode the mysterious debugger icons in Eclipse.
+      </p>
+     </div>
+     <h2 id="faq">
+      FAQ
+     </h2>
+     <div data-outline="faq">
+      <h3 id="i_messed_up_my_eclipse_and_it_doesnt_show_all_the_things_it_used_to_show">
+       I messed up my Eclipse and it doesn’t show all the things it used to show
+      </h3>
+      <div data-outline="i_messed_up_my_eclipse_and_it_doesnt_show_all_the_things_it_used_to_show">
+       <div class="panel panel-default panel-figure pull-right">
+        <div class="panel-body">
+         <img alt="Open Perspective, Java, Debug" src="perspectives.png" width="154"/>
+        </div>
+       </div>
+       <p>
+        First, make sure you are in the
+        <em>
+         Java perspective
+        </em>
+        : in the top right corner of the window, click the
+        <strong>
+         Open Perspective
+        </strong>
+        toolbar button and select
+        <strong>
+         Java
+        </strong>
+        .
+       </p>
+       <p>
+        If your Java perspective doesn’t look right, go to
+        <strong>
+         Window
+        </strong>
+        →
+        <strong>
+         Reset Perspective
+        </strong>
+        to return to the Eclipse defaults.
+       </p>
+      </div>
+     </div>
+     <h2 id="tips_tricks">
+      Tips &amp; Tricks
+     </h2>
+     <div data-outline="tips_tricks">
+      <h3 id="navigating">
+       Navigating
+      </h3>
+      <div data-outline="navigating">
+       <div class="panel panel-default panel-figure pull-right">
+        <div class="panel-body">
+         <img alt="Open Declaration and Open Implementation" src="command-click.png" width="342"/>
+        </div>
+       </div>
+       <p>
+        Command-click (on Mac) or control-click to
+        <strong>
+         jump straight to the definition
+        </strong>
+        of a variable, field, method, class, etc.
+       </p>
+       <p>
+        Return to the previous file you were working on with
+        <strong>
+         Navigate → Back
+        </strong>
+        , which might have keyboard shortcut Alt–left-arrow or Command - [.
+Eclipse’s
+        <em>
+         Navigate Back
+        </em>
+        and
+        <em>
+         Forward
+        </em>
+        are analogous to the back and forward buttons in your web browser.
+       </p>
+       <p>
+        Command- (or control-) -shift-R and command-shift-T bring up a dialog for quickly searching for and
+        <strong>
+         navigating to files
+        </strong>
+        (a.k.a. resources)
+        <strong>
+         and types
+        </strong>
+        (classes), respectively.
+       </p>
+       <div class="clearfix">
+       </div>
+      </div>
+      <h3 id="editing">
+       Editing
+      </h3>
+      <div data-outline="editing">
+       <div class="panel panel-default panel-figure pull-right">
+        <div class="panel-body">
+         <img alt="Enter new name, press return to refactor" src="rename.png" width="329"/>
+        </div>
+       </div>
+       <p>
+        Select an element and use
+        <strong>
+         <em>
+          Refactor → Rename
+         </em>
+        </strong>
+        (or its keyboard shortcut) to rename that variable, field, method, class, etc. wherever it appears.
+       </p>
+       <p>
+        Take advantage of
+        <strong>
+         code completion
+        </strong>
+        to help you use a new API: if you have an object
+        <code>
+         squiggle
+        </code>
+        , typing the name and then a period will bring up code completion options.
+       </p>
+       <p>
+        Use
+        <strong>
+         Source → Organize Imports
+        </strong>
+        or command- (or control-) -shift-O to automatically add and organize Java import statements.
+Just start using a new class,
+        <em>
+         Organize Imports
+        </em>
+        , and you’re good to go.
+       </p>
+       <p>
+        Don’t like formatting and indenting your code manually? Use
+        <strong>
+         <em>
+          Source → Format
+         </em>
+        </strong>
+        to clean up your act.
+       </p>
+       <p>
+        Use
+        <strong>
+         Source → Toggle Comment
+        </strong>
+        or keyboard shortcut Command - / to quickly toggle on or off some lines of code.
+       </p>
+       <p>
+        Use
+        <a href="http://blog.jooq.org/2013/10/12/eclipses-awesome-block-selection-mode/">
+         <strong>
+          block selection
+         </strong>
+        </a>
+        to edit across multiple lines at once.
+       </p>
+       <hr/>
+      </div>
+      <h3 id="have_fun_in_6005">
+       Have fun in 6.005!
+      </h3>
+     </div>
+    </div>
+   </div>
+  </main>
+  <footer>
+   MIT EECS
+  </footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/getting-started/eclipse.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:33 GMT -->
+</html>
+<!-- Handout delivered Tue Feb 02 2016 11:09:14 GMT-0500 (EST) -->

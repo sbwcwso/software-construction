@@ -16,3 +16,21 @@
 [submodule "example/ex22-editor"]
 	path = example/ex22-editor
 	url = git@github.com:sbwcwso/sc-ex22-editor.git
+[submodule "example/ex23-fridge"]
+	path = example/ex23-fridge
+	url = git@github.com:sbwcwso/sc-ex23-fridge.git
+[submodule "example/ex24-echo"]
+	path = example/ex24-echo
+	url = git@github.com:sbwcwso/sc-ex24-echo.git
+[submodule "example/ex25-callbacks"]
+	path = example/ex25-callbacks
+	url = git@github.com:sbwcwso/sc-ex25-callbacks.git
+[submodule "example/ex26-words"]
+	path = example/ex26-words
+	url = git@github.com:sbwcwso/sc-ex26-wrods.git
+[submodule "example/ex27-music-starting"]
+	path = example/ex27-music-starting
+	url = git@github.com:sbwcwso/ex27-music-starting.git
+[submodule "example/ex28-fromula"]
+	path = example/ex28-fromula
+	url = git@github.com:sbwcwso/sc-ex28-formula.git

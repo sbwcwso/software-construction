@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/25-map-filter-reduce/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:28 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    Reading 25: Map, Filter, Reduce
+   </title>
+   <link href="../../web/handout-style.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="../../index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#reading_25_map_filter_reduce">
+      Reading 25: Map, Filter, Reduce
+     </a>
+    </li>
+    <li>
+     <a href="#introduction_an_example">
+      Introduction: an example
+     </a>
+    </li>
+    <li>
+     <a href="#abstracting_out_control_flow">
+      Abstracting out control flow
+     </a>
+    </li>
+    <li>
+     <a href="#map">
+      Map
+     </a>
+    </li>
+    <li>
+     <a href="#functions_as_values">
+      Functions as values
+     </a>
+    </li>
+    <li>
+     <a href="#filter">
+      Filter
+     </a>
+    </li>
+    <li>
+     <a href="#reduce">
+      Reduce
+     </a>
+    </li>
+    <li>
+     <a href="#back_to_the_intro_example">
+      Back to the intro example
+     </a>
+    </li>
+    <li>
+     <a href="#benefits_of_abstracting_out_control">
+      Benefits of abstracting out control
+     </a>
+    </li>
+    <li>
+     <a href="#first-class_functions_in_java">
+      First-class functions in Java
+     </a>
+    </li>
+    <li>
+     <a href="#mapfilterreduce_in_java">
+      Map/filter/reduce in Java
+     </a>
+    </li>
+    <li>
+     <a href="#higher-order_functions_in_java">
+      Higher-order functions in Java
+     </a>
+    </li>
+    <li>
+     <a href="#summary">
+      Summary
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="reading_25_map_filter_reduce">
+    Reading 25: Map, Filter, Reduce
+   </h1>
+   <div data-outline="reading_25_map_filter_reduce">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <h4>
+      Software in 6.005
+     </h4>
+     <table class="table table-striped no-markdown">
+      <tbody>
+       <tr>
+        <th width="33%">
+         Safe from bugs
+        </th>
+        <th>
+         Easy to understand
+        </th>
+        <th>
+         Ready for change
+        </th>
+       </tr>
+       <tr>
+        <td>
+         Correct today and correct in the unknown future.
+        </td>
+        <td>
+         Communicating clearly with future programmers, including future you.
+        </td>
+        <td>
+         Designed to accommodate change without rewriting.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <h4>
+      Objectives
+     </h4>
+     <p>
+      In this reading you’ll learn a design pattern for implementing functions that operate on sequences of elements, and you’ll see how treating functions themselves as
+      <em>
+       first-class values
+      </em>
+      that we can pass around and manipulate in our programs is an especially powerful idea.
+     </p>
+     <ul>
+      <li>
+       Map/filter/reduce
+      </li>
+      <li>
+       Lambda expressions
+      </li>
+      <li>
+       Functional objects
+      </li>
+      <li>
+       Higher-order functions
+      </li>
+     </ul>
+     <h2 id="introduction_an_example">
+      Introduction: an example
+     </h2>
+     <div data-outline="introduction_an_example">
+      <p>
+       Suppose we’re given the following problem: write a method that finds the words in the Java files in your project.
+      </p>
+      <p>
+       Following good practice, we break it down into several simpler steps and write a method for each one:
+      </p>
+      <ul>
+       <li>
+        find all the files in the project, by scanning recursively from the project’s root folder
+       </li>
+       <li>
+        restrict them to files with a particular suffix, in this case
+        <code>
+         .java
+        </code>
+       </li>
+       <li>
+        open each file and read it in line-by-line
+       </li>
+       <li>
+        break each line into words
+       </li>
+      </ul>
+      <p>
+       Writing the individual methods for these substeps, we’ll find ourselves writing a lot of low-level iteration code.
+For example, here’s what the recursive traversal of the project folder might look like:
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment handout-javadoc-comment">/**
+ * Find all the files in the filesystem subtree rooted at folder.
+ * <span class="hljs-doctag">@param</span> folder root of subtree, requires folder.isDirectory() == true
+ * <span class="hljs-doctag">@return</span> list of all ordinary files (not folders) that have folder as
+ *         their ancestor
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;File&gt; <span class="hljs-title">allFilesIn</span><span class="hljs-params">(File folder)</span> </span>{
+    List&lt;File&gt; files = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+    <span class="hljs-keyword">for</span> (File f : folder.listFiles()) {
+        <span class="hljs-keyword">if</span> (f.isDirectory()) {
+            files.addAll(allFilesIn(f));
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (f.isFile()) {
+            files.add(f);
+        }
+    }
+    <span class="hljs-keyword">return</span> files;
+}</code></pre>
+      <p>
+       And here’s what the filtering method might look like, which restricts that file list down to just the Java files (imagine calling this like
+       <code>
+        onlyFilesWithSuffix(files, ".java")
+       </code>
+       ):
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment handout-javadoc-comment">/**
+ * Filter a list of files to those that end with suffix.
+ * <span class="hljs-doctag">@param</span> files list of files (all non-null)
+ * <span class="hljs-doctag">@param</span> suffix string to test
+ * <span class="hljs-doctag">@return</span> a new list consisting of only those files whose names end with
+ *         suffix
+ */</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;File&gt; <span class="hljs-title">onlyFilesWithSuffix</span><span class="hljs-params">(List&lt;File&gt; files, String suffix)</span> </span>{
+    List&lt;File&gt; result = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+    <span class="hljs-keyword">for</span> (File f : files) {
+        <span class="hljs-keyword">if</span> (f.getName().endsWith(suffix)) {
+            result.add(f);
+        }
+    }
+    <span class="hljs-keyword">return</span> result;
+}</code></pre>
+      <p>
+       <a href="https://github.com/mit6005/sp16-ex25-words/blob/master/src/words/Words1.java">
+        <strong>
+         → full Java code for the example
+        </strong>
+       </a>
+      </p>
+      <p>
+       In this reading we discuss
+       <em>
+        map/filter/reduce
+       </em>
+       , a design pattern that substantially simplifies the implementation of functions that operate over sequences of elements.
+In this example, we’ll have lots of sequences — lists of files; input streams that are sequences of lines; lines that are sequences of words; frequency tables that are sequences of (word, count) pairs.
+Map/filter/reduce will enable us to operate on those sequences with no explicit control flow — not a single
+       <code>
+        for
+       </code>
+       loop or
+       <code>
+        if
+       </code>
+       statement.
+      </p>
+      <p>
+       Along the way, we’ll also see an important Big Idea: functions as “first-class” data values, meaning that they can be stored in variables, passed as arguments to functions, and created dynamically like other values.
+      </p>
+      <p>
+       Using first-class functions in Java is more verbose, uses some unfamiliar syntax, and the interaction with static typing adds some complexity.
+So to get started with map/filter/reduce, we’ll switch back to Python.
+      </p>
+     </div>
+     <h2 id="abstracting_out_control_flow">
+      Abstracting out control flow
+     </h2>
+     <div data-outline="abstracting_out_control_flow">
+      <p>
+       We’ve already seen one design pattern that abstracts away from the details of iterating over a data structure: Iterator.
+      </p>
+      <h3 id="iterator_abstraction">
+       Iterator abstraction
+      </h3>
+      <div data-outline="iterator_abstraction">
+       <p>
+        Iterator gives you a sequence of elements from a data structure, without you having to worry about whether the data structure is a set or a token stream or a list or an array — the
+        <a href="http://docs.oracle.com/javase/8/docs/api/?java/util/Iterator.html">
+         <code>
+          Iterator
+         </code>
+        </a>
+        looks the same no matter what the data structure is.
+       </p>
+       <p>
+        For example, given a
+        <code>
+         List&lt;File&gt; files
+        </code>
+        , we can iterate using indices:
+       </p>
+       <pre><code class="language-java hljs"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> ii = <span class="hljs-number">0</span>; ii &lt; files.size(); ii++) {
+    File f = files.get(ii);
+    <span class="hljs-comment">// ...</span></code></pre>
+       <p>
+        But this code depends on the
+        <code>
+         size
+        </code>
+        and
+        <code>
+         get
+        </code>
+        methods of
+        <code>
+         List
+        </code>
+        , which might be different in another data structure.
+Using an iterator abstracts away the details:
+       </p>
+       <pre><code class="language-java hljs">Iterator&lt;File&gt; iter = files.iterator();
+<span class="hljs-keyword">while</span> (iter.hasNext()) {
+    File f = iter.next();
+    <span class="hljs-comment">// ...</span></code></pre>
+       <p>
+        Now the loop will be identical for any type that provides an
+        <code>
+         Iterator
+        </code>
+        .
+There is, in fact, an interface for such types:
+        <a href="http://docs.oracle.com/javase/8/docs/api/?java/lang/Iterable.html">
+         <code>
+          Iterable
+         </code>
+        </a>
+        .
+Any
+        <code>
+         Iterable
+        </code>
+        can be used with Java’s
+        <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html">
+         enhanced for statement
+        </a>
+        —
+        <code>
+         for (File f : files)
+        </code>
+        — and under the hood, it uses an iterator.
+       </p>
+      </div>
+      <h3 id="mapfilterreduce_abstraction">
+       Map/filter/reduce abstraction
+      </h3>
+      <div data-outline="mapfilterreduce_abstraction">
+       <p>
+        The map/filter/reduce patterns in this reading do something similar to Iterator, but at an even higher level: they treat the entire sequence of elements as a unit, so that the programmer doesn’t have to name and work with the elements individually.
+In this paradigm, the control statements disappear: specifically, the
+        <code>
+         for
+        </code>
+        statements, the
+        <code>
+         if
+        </code>
+        statements, and the
+        <code>
+         return
+        </code>
+        statements in the code from our introductory example will be gone.
+We’ll also be able to get rid of most of the temporary names (i.e., the local variables
+        <code>
+         files
+        </code>
+        ,
+        <code>
+         f
+        </code>
+        , and
+        <code>
+         result
+        </code>
+        ).
+       </p>
+      </div>
+      <h3 id="sequences">
+       Sequences
+      </h3>
+      <div data-outline="sequences">
+       <p>
+        Let’s imagine an abstract datatype
+        <code>
+         Seq&lt;E&gt;
+        </code>
+        that represents a
+        <em>
+         sequence
+        </em>
+        of elements of type
+        <code>
+         E
+        </code>
+        .
+       </p>
+       <p>
+        For example,
+        <code>
+         [1, 2, 3, 4]
+        </code>
+        ∈
+        <code>
+         Seq&lt;Integer&gt;
+        </code>
+        .
+       </p>
+       <p>
+        Any datatype that has an iterator can qualify as a sequence: array, list, set, etc.
+A string is also a sequence (of characters), although Java’s strings don’t offer an iterator.
+Python is more consistent in this respect: not only are lists iterable, but so are strings, tuples (which are immutable lists), and even input streams (which produce a sequence of lines).
+We’ll see these examples in Python first, since the syntax is very readable and familiar to you, and then we’ll see how it works in Java.
+       </p>
+       <p>
+        We’ll have three operations for sequences: map, filter, and reduce.
+Let’s look at each one in turn, and then look at how they work together.
+       </p>
+      </div>
+     </div>
+     <h2 id="map">
+      Map
+     </h2>
+     <div data-outline="map">
+      <p>
+       <strong>
+        Map
+       </strong>
+       applies a unary function to each element in the sequence and returns a new sequence containing the results, in the same order:
+      </p>
+      <p>
+       <strong>
+        map : (E → F) × Seq&lt;‍E&gt; → Seq&lt;‍F&gt;
+       </strong>
+      </p>
+      <p>
+       For example, in Python:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> math <span class="hljs-keyword">import</span> sqrt
+<span class="hljs-meta">&gt;&gt;&gt; </span>map(sqrt, [<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">9</span>, <span class="hljs-number">16</span>])
+[<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>map(str.lower, [<span class="hljs-string">'A'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'C'</span>])
+[<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>]</code></pre>
+      <p>
+       <code>
+        map
+       </code>
+       is built-in, but it is also straightforward to implement in Python:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">map</span><span class="hljs-params">(f, seq)</span>:</span>
+    result = []
+    <span class="hljs-keyword">for</span> elt <span class="hljs-keyword">in</span> seq:
+        result.append(f(elt))
+    <span class="hljs-keyword">return</span> result</code></pre>
+      <p>
+       This operation captures a common pattern for operating over sequences: doing the same thing to each element of the sequence.
+      </p>
+     </div>
+     <h2 id="functions_as_values">
+      Functions as values
+     </h2>
+     <div data-outline="functions_as_values">
+      <p>
+       Let’s pause here for a second, because we’re doing something unusual with functions. The
+       <code>
+        map
+       </code>
+       function takes a reference to a
+       <em>
+        function
+       </em>
+       as its first argument — not to the result of that function.
+When we wrote
+      </p>
+      <pre><code class="language-python hljs">map(sqrt, [<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">9</span>, <span class="hljs-number">16</span>])</code></pre>
+      <p>
+       we didn’t
+       <em>
+        call
+       </em>
+       <code>
+        sqrt
+       </code>
+       (like
+       <code>
+        sqrt(25)
+       </code>
+       is a call), instead we just used its name.
+In Python, the name of a function is a reference to an object representing that function.
+You can assign that object to another variable if you like, and it still behaves like
+       <code>
+        sqrt
+       </code>
+       :
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>mySquareRoot = sqrt
+<span class="hljs-meta">&gt;&gt;&gt; </span>mySquareRoot(<span class="hljs-number">25</span>)
+<span class="hljs-number">5.0</span></code></pre>
+      <p>
+       You can also pass a reference to the function object as a parameter to another function, and that’s what we’re doing here with
+       <code>
+        map
+       </code>
+       .
+You can use function objects the same way you would use any other data value in Python (like numbers or strings or objects).
+      </p>
+      <p>
+       Functions are
+       <strong>
+        first-class
+       </strong>
+       in Python, meaning that they can be assigned to variables, passed as parameters, used as return values, and stored in data structures.
+First-class functions are a very powerful programming idea.
+The first practical programming language that used them was Lisp, invented by John McCarthy at MIT.
+But the idea of programming with functions as first-class values actually predates computers, tracing back to Alonzo Church’s lambda calculus.
+The lambda calculus used the Greek letter λ to define new functions; this term stuck, and you’ll see it as a keyword not only in Lisp and its descendants, but also in Python.
+      </p>
+      <p>
+       We’ve seen how to use built-in library functions as first-class values; how do we make our own?
+One way is using a familiar function definition, which gives the function a name:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">powerOfTwo</span><span class="hljs-params">(k)</span>:</span>
+<span class="hljs-meta">... </span>    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>**k
+<span class="hljs-meta">... </span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>powerOfTwo(<span class="hljs-number">5</span>)                 
+<span class="hljs-number">32</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>map(powerOfTwo, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>])
+[<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-number">16</span>]</code></pre>
+      <p>
+       When you only need the function in one place, however — which often comes up in programming with functions — it’s more convenient to use a
+       <strong>
+        lambda expression
+       </strong>
+       :
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-keyword">lambda</span> k: <span class="hljs-number">2</span>**k</code></pre>
+      <p class="no-markdown">
+       This expression represents a function of one argument (called
+       <code>
+        k
+       </code>
+       ) that returns the value 2
+       <sup>
+        k
+       </sup>
+       .
+You can use it anywhere you would have used
+       <code>
+        powerOfTwo
+       </code>
+       :
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>(<span class="hljs-keyword">lambda</span> k: <span class="hljs-number">2</span>**k)(<span class="hljs-number">5</span>)
+<span class="hljs-number">32</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>map(<span class="hljs-keyword">lambda</span> k: <span class="hljs-number">2</span>**k, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>])
+[<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-number">16</span>]</code></pre>
+      <p>
+       Python lambda expressions are unfortunately syntactically limited, to functions that can be written with just a
+       <code>
+        return
+       </code>
+       statement and nothing else (no
+       <code>
+        if
+       </code>
+       statements, no
+       <code>
+        for
+       </code>
+       loops, no local variables).
+But remember that’s our goal with map/filter/reduce anyway, so it won’t be a serious obstacle.
+      </p>
+      <p>
+       Guido Von Rossum, the creator of Python, wrote a blog post about the design principle that led not only to first-class functions in Python, but first-class methods as well:
+       <a href="http://python-history.blogspot.com/2009/02/first-class-everything.html">
+        First-class Everything
+       </a>
+       .
+      </p>
+      <h3 id="more_ways_to_use_map">
+       More ways to use map
+      </h3>
+      <div data-outline="more_ways_to_use_map">
+       <p>
+        Map is useful even if you don’t care about the return value of the function.
+When you have a sequence of mutable objects, for example, you can map a mutator operation over them:
+       </p>
+       <pre><code class="language-python hljs">map(IOBase.close, streams) <span class="hljs-comment"># closes each stream on the list</span>
+map(Thread.join, threads)  <span class="hljs-comment"># waits for each thread to finish</span></code></pre>
+       <p>
+        Some versions of map (including Python’s built-in
+        <code>
+         map
+        </code>
+        ) also support mapping functions with multiple arguments.
+For example, you can add two lists of numbers element-wise:
+       </p>
+       <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> operator
+<span class="hljs-meta">&gt;&gt;&gt; </span>map(operator.add, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>])
+[<span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">9</span>]</code></pre>
+      </div>
+     </div>
+     <h2 id="filter">
+      Filter
+     </h2>
+     <div data-outline="filter">
+      <p>
+       Our next important sequence operation is
+       <strong>
+        filter
+       </strong>
+       , which tests each element with a unary predicate.
+Elements that satisfy the predicate are kept; those that don’t are removed.
+A new list is returned; filter doesn’t modify its input list.
+      </p>
+      <p>
+       <strong>
+        filter : (E → boolean) × Seq&lt;‍E&gt; → Seq&lt;‍E&gt;
+       </strong>
+      </p>
+      <p>
+       Python examples:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>filter(str.isalpha, [<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>, <span class="hljs-string">'a'</span>]) 
+[<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, <span class="hljs-string">'a'</span>]</code></pre>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">isOdd</span><span class="hljs-params">(x)</span>:</span> <span class="hljs-keyword">return</span> x % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>
+<span class="hljs-meta">... </span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>filter(isOdd, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>])
+[<span class="hljs-number">1</span>, <span class="hljs-number">3</span>]</code></pre>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>filter(<span class="hljs-keyword">lambda</span> s: len(s)&gt;<span class="hljs-number">0</span>, [<span class="hljs-string">'abc'</span>, <span class="hljs-string">''</span>, <span class="hljs-string">'d'</span>])
+[<span class="hljs-string">'abc'</span>, <span class="hljs-string">'d'</span>]</code></pre>
+      <p>
+       We can define filter in a straightforward way:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">filter</span><span class="hljs-params">(f, seq)</span>:</span>
+    result = []
+    <span class="hljs-keyword">for</span> elt <span class="hljs-keyword">in</span> seq:
+        <span class="hljs-keyword">if</span> f(elt):
+            result.append(elt)
+    <span class="hljs-keyword">return</span> result</code></pre>
+     </div>
+     <h2 id="reduce">
+      Reduce
+     </h2>
+     <div data-outline="reduce">
+      <p>
+       Our final operator,
+       <strong>
+        reduce
+       </strong>
+       , combines the elements of the sequence together, using a binary function.
+In addition to the function and the list, it also takes an
+       <em>
+        initial value
+       </em>
+       that initializes the reduction, and that ends up being the return value if the list is empty.
+      </p>
+      <p>
+       <strong>
+        reduce : (F × E → F) × Seq&lt;‍E&gt; × F → F
+       </strong>
+      </p>
+      <p>
+       <code>
+        reduce(f, list, init)
+       </code>
+       combines the elements of the list from left to right, as follows:
+      </p>
+      <blockquote class="no-markdown">
+       result
+       <sub>
+        0
+       </sub>
+       = init
+       <br>
+        result
+        <sub>
+         1
+        </sub>
+        = f(result
+        <sub>
+         0
+        </sub>
+        , list[0])
+        <br>
+         result
+         <sub>
+          2
+         </sub>
+         = f(result
+         <sub>
+          1
+         </sub>
+         , list[1])
+         <br>
+          ...
+          <br>
+           result
+           <sub>
+            n
+           </sub>
+           = f(result
+           <sub>
+            n-1
+           </sub>
+           , list[n-1])
+          </br>
+         </br>
+        </br>
+       </br>
+      </blockquote>
+      <p class="no-markdown">
+       result
+       <sub>
+        n
+       </sub>
+       is the final result for an n-element list.
+      </p>
+      <p>
+       Adding numbers is probably the most straightforward example:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>reduce(<span class="hljs-keyword">lambda</span> x,y: x+y, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], <span class="hljs-number">0</span>)
+<span class="hljs-number">6</span>
+<span class="hljs-comment"># --or--</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> operator
+<span class="hljs-meta">&gt;&gt;&gt; </span>reduce(operator.add, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], <span class="hljs-number">0</span>)
+<span class="hljs-number">6</span></code></pre>
+      <p>
+       There are two design choices in the reduce operation.
+First is whether to require an initial value.
+In Python’s reduce function, the initial value is optional, and if you omit it, reduce uses the first element of the list as its initial value.
+So you get behavior like this instead:
+      </p>
+      <blockquote class="no-markdown">
+       result
+       <sub>
+        0
+       </sub>
+       = undefined (reduce throws an exception if the list is empty)
+       <br>
+        result
+        <sub>
+         1
+        </sub>
+        = list[0]
+        <br>
+         result
+         <sub>
+          2
+         </sub>
+         = f(result
+         <sub>
+          1
+         </sub>
+         , list[1])
+         <br>
+          ...
+          <br>
+           result
+           <sub>
+            n
+           </sub>
+           = f(result
+           <sub>
+            n-1
+           </sub>
+           , list[n-1])
+          </br>
+         </br>
+        </br>
+       </br>
+      </blockquote>
+      <p>
+       This makes it easier to use reducers like
+       <code>
+        max
+       </code>
+       , which have no well-defined initial value:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>reduce(max, [<span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>])
+<span class="hljs-number">8</span></code></pre>
+      <p>
+       The second design choice is the order in which the elements are accumulated.
+For associative operators like
+       <code>
+        add
+       </code>
+       and
+       <code>
+        max
+       </code>
+       it makes no difference, but for other operators it can.
+Python’s reduce is also called
+       <strong>
+        fold-left
+       </strong>
+       in other programming languages, because it combines the sequence starting from the left (the first element).
+       <strong>
+        Fold-right
+       </strong>
+       goes in the other direction:
+      </p>
+      <p>
+       <strong>
+        fold-right : (E × F → F) × Seq&lt;‍E&gt; × F → F
+       </strong>
+      </p>
+      <p>
+       where
+       <code>
+        fold-right(f, list, init)
+       </code>
+       of an n-element list follows this pattern:
+      </p>
+      <blockquote class="no-markdown">
+       result
+       <sub>
+        0
+       </sub>
+       = init
+       <br>
+        result
+        <sub>
+         1
+        </sub>
+        = f(list[n-1], result
+        <sub>
+         0
+        </sub>
+        )
+        <br>
+         result
+         <sub>
+          2
+         </sub>
+         = f(list[n-2], result
+         <sub>
+          1
+         </sub>
+         )
+         <br>
+          ...
+          <br>
+           result
+           <sub>
+            n
+           </sub>
+           = f(list[0], result
+           <sub>
+            n-1
+           </sub>
+           )
+          </br>
+         </br>
+        </br>
+       </br>
+      </blockquote>
+      <p class="no-markdown">
+       to produce result
+       <sub>
+        n
+       </sub>
+       as the final result.
+      </p>
+      <p>
+       Here’s a diagram of two ways to reduce: from the left or from the right:
+      </p>
+      <table class="no-markdown">
+       <tbody>
+        <tr>
+         <td rowspan="2">
+          <img src="fold-left.svg"/>
+         </td>
+         <td style="text-align: left; padding: .75em 1.5em .75em .75em;" valign="top">
+          fold-left : (F × E → F) × Seq&lt;‍E&gt; × F → F
+          <br>
+           <strong>
+            fold-left(-, [1, 2, 3], 0) = -6
+           </strong>
+          </br>
+         </td>
+         <td rowspan="2">
+          <img src="fold-right.svg"/>
+         </td>
+        </tr>
+        <tr>
+         <td style="text-align: right; padding: .75em 0 .75em 1.5em;" valign="bottom">
+          fold-right : (E × F → F) × Seq&lt;‍E&gt; × F → F
+          <br>
+           <strong>
+            fold-right(-, [1, 2, 3], 0) = 2
+           </strong>
+          </br>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       The return type of the reduce operation doesn’t have to match the type of the list elements.
+For example, we can use reduce to glue together a sequence into a string:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>reduce(<span class="hljs-keyword">lambda</span> s,x: s+str(x), [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>], <span class="hljs-string">''</span>) 
+<span class="hljs-string">'1234'</span></code></pre>
+      <p>
+       Or to flatten out nested sublists into a single list:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>reduce(operator.concat, [[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>], [], [<span class="hljs-number">5</span>]], [])
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]</code></pre>
+      <p>
+       This is a useful enough sequence operation that we’ll define it as
+       <strong>
+        flatten
+       </strong>
+       , although it’s just a reduce step inside:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">flatten</span><span class="hljs-params">(list)</span>:</span>
+    <span class="hljs-keyword">return</span> reduce(operator.concat, list, [])</code></pre>
+      <h3 id="more_examples">
+       More examples
+      </h3>
+      <div data-outline="more_examples">
+       <p class="no-markdown">
+        Suppose we have a polynomial represented as a list of coefficients, a[0], a[1], ..., a[n-1], where a[i] is the coefficient of x
+        <sup>
+         i
+        </sup>
+        .
+Then we can evaluate it using map and reduce:
+       </p>
+       <div class="pull-margin">
+        <pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">evaluate</span><span class="hljs-params">(a, x)</span>:</span>
+    xi = map(<span class="hljs-keyword">lambda</span> i: x**i, range(<span class="hljs-number">0</span>, len(a))) <span class="hljs-comment"># [x^0, x^1, x^2, ..., x^(n-1)]</span>
+    axi = map(operator.mul, a, xi)             <span class="hljs-comment"># [a[0]*x^0, a[1]*x^1, ..., a[n-1]*x^(n-1)]</span>
+    <span class="hljs-keyword">return</span> reduce(operator.add, axi, <span class="hljs-number">0</span>)        <span class="hljs-comment"># sum of axi</span></code></pre>
+       </div>
+       <p>
+        This code uses the convenient Python generator method
+        <code>
+         range(a,b)
+        </code>
+        , which generates a list of integers from a to b-1.
+In map/filter/reduce programming, this kind of method replaces a
+        <code>
+         for
+        </code>
+        loop that indexes from a to b.
+       </p>
+       <p>
+        Now let’s look at a typical database query example.
+Suppose we have a database about digital cameras, in which each object is of type
+        <code>
+         Camera
+        </code>
+        with observer methods for its properties (
+        <code>
+         brand()
+        </code>
+        ,
+        <code>
+         pixels()
+        </code>
+        ,
+        <code>
+         cost()
+        </code>
+        , etc.).
+The whole database is in a list called
+        <code>
+         cameras
+        </code>
+        .
+Then we can describe queries on this database using map/filter/reduce:
+       </p>
+       <div class="pull-margin">
+        <pre><code class="language-python hljs"><span class="hljs-comment"># What's the highest resolution Nikon sells? </span>
+reduce(max, map(Camera.pixels, filter(<span class="hljs-keyword">lambda</span> c: c.brand() == <span class="hljs-string">"Nikon"</span>, cameras)))</code></pre>
+       </div>
+       <p>
+        Relational databases use the map/filter/reduce paradigm (where it’s called project/select/aggregate).
+        <a href="https://en.wikipedia.org/wiki/SQL">
+         SQL
+        </a>
+        (Structured Query Language) is the
+        <em>
+         de facto
+        </em>
+        standard language for querying relational databases.
+A typical SQL query looks like this:
+       </p>
+       <pre><code class="hljs cs"><span class="hljs-function"><span class="hljs-keyword">select</span> <span class="hljs-title">max</span>(<span class="hljs-params">pixels</span>) <span class="hljs-keyword">from</span> cameras <span class="hljs-keyword">where</span> brand </span>= <span class="hljs-string">"Nikon"</span>
+</code></pre>
+       <blockquote>
+        <p>
+         <code>
+          cameras
+         </code>
+         is a
+         <strong>
+          sequence
+         </strong>
+         (a list of rows, where each row has the data for one camera)
+        </p>
+        <p>
+         <code>
+          where brand = "Nikon"
+         </code>
+         is a
+         <strong>
+          filter
+         </strong>
+        </p>
+        <p>
+         <code>
+          pixels
+         </code>
+         is a
+         <strong>
+          map
+         </strong>
+         (extracting just the pixels field from the row)
+        </p>
+        <p>
+         <code>
+          max
+         </code>
+         is a
+         <strong>
+          reduce
+         </strong>
+        </p>
+       </blockquote>
+      </div>
+     </div>
+     <h2 id="back_to_the_intro_example">
+      Back to the intro example
+     </h2>
+     <div data-outline="back_to_the_intro_example">
+      <p>
+       Going back to the example we started with, where we want to find all the words in the Java files in our project, let’s try creating a useful abstraction for filtering files by suffix:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fileEndsWith</span><span class="hljs-params">(suffix)</span>:</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">lambda</span> file: file.getName().endsWith(suffix)</code></pre>
+      <p>
+       <code>
+        fileEndsWith
+       </code>
+       returns
+       <em>
+        functions
+       </em>
+       that are useful as filters: it takes a filename suffix like
+       <code>
+        .java
+       </code>
+       and dynamically generates a function that we can use with filter to test for that suffix:
+      </p>
+      <pre><code class="language-python hljs">filter(fileEndsWith(<span class="hljs-string">".java"</span>), files)</code></pre>
+      <p>
+       <code>
+        fileEndsWith
+       </code>
+       is a different kind of beast than our usual functions.
+It’s a
+       <strong>
+        higher-order function
+       </strong>
+       , meaning that it’s a function that takes another function as an argument, or returns another function as its result.
+Higher-order functions are operations on the datatype of functions; in this case,
+       <code>
+        fileEndsWith
+       </code>
+       is a
+       <em>
+        producer
+       </em>
+       of functions.
+      </p>
+      <p>
+       Now let’s use map, filter, and flatten (which we defined above using reduce) to recursively traverse the folder tree:
+      </p>
+      <div class="pull-margin">
+       <pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">allFilesIn</span><span class="hljs-params">(folder)</span>:</span>
+    children = folder.listFiles()
+    subfolders = filter(File.isDirectory, children)
+    descendants = flatten(map(allFilesIn, subfolders))
+    <span class="hljs-keyword">return</span> descendants + filter(File.isFile, children)</code></pre>
+      </div>
+      <p>
+       The first line gets all the children of the folder, which might look like this:
+      </p>
+      <pre><code class="hljs json">[<span class="hljs-string">"src/client"</span>, <span class="hljs-string">"src/server"</span>, <span class="hljs-string">"src/Main.java"</span>, ...]
+</code></pre>
+      <p>
+       The second line is the key bit: it filters the children for just the subfolders, and then recursively maps
+       <code>
+        allFilesIn
+       </code>
+       against this list of subfolders!
+The result might look like this:
+      </p>
+      <pre><code class="hljs json">[[<span class="hljs-string">"src/client/MyClient.java"</span>, ...], [<span class="hljs-string">"src/server/MyServer.java"</span>, ...], ...]
+</code></pre>
+      <p>
+       So we have to flatten it to remove the nested structure.
+Then we add the immediate children that are plain files (not folders), and that’s our result.
+      </p>
+      <p>
+       We can also do the other pieces of the problem with map/filter/reduce.
+Once we have the list of files we want to extract words from, we’re ready to load their contents.
+We can use map to get their pathnames as strings, open them, and then read in each file as a list of files:
+      </p>
+      <pre><code class="language-python hljs">pathnames = map(File.getPath, files)
+streams = map(open, pathnames)
+lines = map(list, streams)</code></pre>
+      <p>
+       This actually looks like a single map operation where we want to apply three functions to the elements, so let’s pause to create another useful higher-order function: composing functions together.
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">compose</span><span class="hljs-params">(f, g)</span>:</span>
+    <span class="hljs-string">"""Requires that f and g are functions, f:A-&gt;B and g:B-&gt;C.
+    Returns a function A-&gt;C by composing f with g."""</span> 
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">lambda</span> x: g(f(x))</code></pre>
+      <p>
+       Now we can use a single map:
+      </p>
+      <pre><code class="language-python hljs">lines = map(compose(compose(File.getPath, open), list), files)</code></pre>
+      <p>
+       Better, since we already have three functions to apply, let’s design a way to compose an arbitrary chain of functions:
+      </p>
+      <pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">chain</span><span class="hljs-params">(funcs)</span>:</span>
+    <span class="hljs-string">"""Requires funcs is a list of functions [A-&gt;B, B-&gt;C, ..., Y-&gt;Z]. 
+    Returns a fn A-&gt;Z that is the left-to-right composition of funcs."""</span>
+    <span class="hljs-keyword">return</span> reduce(compose, funcs)</code></pre>
+      <p>
+       So that the map operation becomes:
+      </p>
+      <pre><code class="language-python hljs">lines = map(chain([File.getPath, open, list]), files)</code></pre>
+      <p>
+       Now we see more of the power of first-class functions.
+We can put functions into data structures and use operations on those data structures, like map, reduce, and filter, on the functions themselves!
+      </p>
+      <p>
+       Since this map will produce a list of lists of lines (one list of lines for each file), let’s flatten it to get a single line list, ignoring file boundaries:
+      </p>
+      <pre><code class="language-python hljs">allLines = flatten(map(chain([File.getPath, open, list]), files))</code></pre>
+      <p>
+       Then we split each line into words similarly:
+      </p>
+      <pre><code class="language-python hljs">words = flatten(map(str.split, lines))</code></pre>
+      <p>
+       And we’re done, we have our list of all words in the project’s Java files!
+As promised, the control statements have disappeared.
+      </p>
+      <p>
+       <a href="https://github.com/mit6005/sp16-ex25-words/blob/master/src/words/Words2.py">
+        <strong>
+         → full Python code for the example
+        </strong>
+       </a>
+      </p>
+     </div>
+     <h2 id="benefits_of_abstracting_out_control">
+      Benefits of abstracting out control
+     </h2>
+     <div data-outline="benefits_of_abstracting_out_control">
+      <p>
+       Map/filter/reduce can often make code shorter and simpler, and allow the programmer to focus on the heart of the computation rather than on the details of loops, branches, and control flow.
+      </p>
+      <p>
+       By arranging our program in terms of map, filter, and reduce, and in particular using immutable datatypes and pure functions (functions that do not mutate data) as much as possible, we’ve created more opportunities for safe concurrency.
+Maps and filters using pure functions over immutable datatypes are instantly parallelizable — invocations of the function on different elements of the sequence can be run in different threads, on different processors, even on different machines, and the result will still be the same.
+       <a href="https://en.wikipedia.org/wiki/MapReduce">
+        MapReduce
+       </a>
+       is a pattern for parallelizing large computations in this way.
+      </p>
+     </div>
+     <h2 id="first-class_functions_in_java">
+      First-class functions in Java
+     </h2>
+     <div data-outline="first-class_functions_in_java">
+      <p>
+       We’ve seen what first-class functions look like in Python; how does this all work in Java?
+      </p>
+      <p>
+       In Java, the only first-class values are primitive values (ints, booleans, characters, etc.) and object references.
+But objects can carry functions with them, in the form of methods.
+So it turns out that the way to implement a first-class function, in an object-oriented programming language like Java that doesn’t support first-class functions directly, is to use an object with a method representing the function.
+      </p>
+      <p>
+       We’ve actually seen this before several times already:
+      </p>
+      <ul>
+       <li>
+        The
+        <code>
+         Runnable
+        </code>
+        object that you pass to a
+        <code>
+         Thread
+        </code>
+        constructor is a first-class function,
+        <code>
+         void run()
+        </code>
+        .
+       </li>
+       <li>
+        The
+        <code>
+         Comparator&lt;T&gt;
+        </code>
+        object that you pass to a sorted collection (e.g.
+        <code>
+         SortedSet
+        </code>
+        ) is a first-class function,
+        <code>
+         int compare(T o1, T o2)
+        </code>
+        .
+       </li>
+       <li>
+        The
+        <code>
+         KeyListener
+        </code>
+        object that you register with the graphical user interface toolkit to get keyboard events is a bundle of several functions,
+        <code>
+         keyPressed(KeyEvent)
+        </code>
+        ,
+        <code>
+         keyReleased(KeyEvent)
+        </code>
+        , etc.
+       </li>
+      </ul>
+      <p>
+       This design pattern is called a
+       <strong>
+        functional object
+       </strong>
+       or
+       <strong>
+        functor
+       </strong>
+       , an object whose purpose is to represent a function.
+      </p>
+      <h3 id="lambda_expressions_in_java">
+       Lambda expressions in Java
+      </h3>
+      <div data-outline="lambda_expressions_in_java">
+       <p>
+        Java’s lambda expression syntax provides a succinct way to create instances of functional objects.
+For example, instead of writing:
+       </p>
+       <pre><code class="language-java hljs"><span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() {
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+        System.out.println(<span class="hljs-string">"Hello!"</span>);
+    }
+}).start();</code></pre>
+       <p>
+        we can use a lambda expression:
+       </p>
+       <pre><code class="language-java hljs"><span class="hljs-keyword">new</span> Thread(() -&gt; {
+    System.out.println(<span class="hljs-string">"Hello"</span>);
+}).start();</code></pre>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         On the Java Tutorials page for Lambda Expressions, read
+         <a class="alert-link" href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html#syntax">
+          Syntax of Lambda Expressions
+         </a>
+         .
+        </p>
+       </div>
+       <p>
+        There’s no magic here: Java still doesn’t have first-class functions.
+So you can only use a lambda when the Java compiler can verify two things:
+       </p>
+       <ol>
+        <li>
+         It must be able to determine the type of the functional object the lambda will create.
+In this example, the compiler sees that the
+         <code>
+          Thread
+         </code>
+         constructor takes a
+         <code>
+          Runnable
+         </code>
+         , so it will infer that the type must be
+         <code>
+          Runnable
+         </code>
+         .
+        </li>
+        <li>
+         This inferred type must be
+         <em>
+          functional interface
+         </em>
+         : an interface with only one (abstract) method.
+In this example,
+         <code>
+          Runnable
+         </code>
+         indeed only has a single method —
+         <code>
+          void run()
+         </code>
+         — so the compiler knows the code in the body of the lambda belongs in the body of a
+         <code>
+          run
+         </code>
+         method of a new
+         <code>
+          Runnable
+         </code>
+         object.
+        </li>
+       </ol>
+       <p>
+        Java provides some
+        <a href="http://docs.oracle.com/javase/8/docs/api/?java/util/function/package-summary.html">
+         standard functional interfaces
+        </a>
+        we can use to write code in the map/filter/reduce pattern, e.g.:
+       </p>
+       <ul>
+        <li>
+         <a href="http://docs.oracle.com/javase/8/docs/api/?java/util/function/Function.html">
+          <code>
+           Function&lt;T,R&gt;
+          </code>
+         </a>
+         represents unary functions from
+         <code>
+          T
+         </code>
+         to
+         <code>
+          R
+         </code>
+        </li>
+        <li>
+         <a href="http://docs.oracle.com/javase/8/docs/api/?java/util/function/BiFunction.html">
+          <code>
+           BiFunction&lt;T,U,R&gt;
+          </code>
+         </a>
+         represents binary functions from
+         <code>
+          T
+         </code>
+         ×
+         <code>
+          U
+         </code>
+         to
+         <code>
+          R
+         </code>
+        </li>
+        <li>
+         <a href="http://docs.oracle.com/javase/8/docs/api/?java/util/function/Predicate.html">
+          <code>
+           Predicate&lt;T&gt;
+          </code>
+         </a>
+         represents functions from
+         <code>
+          T
+         </code>
+         to boolean
+        </li>
+       </ul>
+       <p>
+        So we could implement map in Java like so:
+       </p>
+       <pre><code class="language-java hljs"><span class="hljs-comment handout-javadoc-comment">/**
+ * Apply a function to every element of a list.
+ * <span class="hljs-doctag">@param</span> f function to apply
+ * <span class="hljs-doctag">@param</span> list list to iterate over
+ * <span class="hljs-doctag">@return</span> [f(list[0]), f(list[1]), ..., f(list[n-1])]
+ */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T,R&gt; <span class="hljs-function">List&lt;R&gt; <span class="hljs-title">map</span><span class="hljs-params">(Function&lt;T,R&gt; f, List&lt;T&gt; list)</span> </span>{
+    List&lt;R&gt; result = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+    <span class="hljs-keyword">for</span> (T t : list) {
+        result.add(f.apply(t));
+    }
+    <span class="hljs-keyword">return</span> result;
+}</code></pre>
+       <p>
+        And here’s an example of using map; first we’ll write it using the familiar syntax:
+       </p>
+       <pre><code class="language-java hljs"><span class="hljs-comment">// anonymous classes like this one are effectively lambda expressions</span>
+Function&lt;String,String&gt; toLowerCase = <span class="hljs-keyword">new</span> Function&lt;&gt;() {
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">apply</span><span class="hljs-params">(String s)</span> </span>{ <span class="hljs-keyword">return</span> s.toLowerCase(); }
+};
+map(toLowerCase, Arrays.asList(<span class="hljs-keyword">new</span> String[] {<span class="hljs-string">"A"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"C"</span>}));</code></pre>
+       <p>
+        And with a lambda expression:
+       </p>
+       <pre><code class="language-java hljs">map(s -&gt; s.toLowerCase(), Arrays.asList(<span class="hljs-keyword">new</span> String[] {<span class="hljs-string">"A"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"C"</span>}));
+<span class="hljs-comment">// --or--</span>
+map((s) -&gt; s.toLowerCase(), Arrays.asList(<span class="hljs-keyword">new</span> String[] {<span class="hljs-string">"A"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"C"</span>}));
+<span class="hljs-comment">// --or--</span>
+map((s) -&gt; { <span class="hljs-keyword">return</span> s.toLowerCase(); }, Arrays.asList(<span class="hljs-keyword">new</span> String[] {<span class="hljs-string">"A"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"C"</span>}));</code></pre>
+       <p>
+        In this example, the lambda expression is just wrapping a call to
+        <code>
+         String
+        </code>
+        ’s
+        <code>
+         toLowerCase
+        </code>
+        .
+We can use a
+        <em>
+         method reference
+        </em>
+        to avoid writing the lambda, with the syntax
+        <code>
+         ::
+        </code>
+        .
+The signature of the method we refer to must match the signature required by the functional interface for static typing to be satisfied:
+       </p>
+       <pre><code class="language-java hljs">map(String::toLowerCase, Arrays.asList(<span class="hljs-keyword">new</span> String[] {<span class="hljs-string">"A"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"C"</span>}));</code></pre>
+       <p>
+        In the Java Tutorials, you can read more about
+        <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html">
+         <strong>
+          method references
+         </strong>
+        </a>
+        if you want the details.
+       </p>
+       <p>
+        Using a method reference (vs. calling it) in Java serves the same purpose as referring to a function by name (vs. calling it) in Python.
+       </p>
+      </div>
+     </div>
+     <h2 id="mapfilterreduce_in_java">
+      Map/filter/reduce in Java
+     </h2>
+     <div data-outline="mapfilterreduce_in_java">
+      <p>
+       The
+       <a href="#sequences">
+        abstract sequence type
+       </a>
+       we defined above exists in Java as
+       <a href="http://docs.oracle.com/javase/8/docs/api/?java/util/stream/Stream.html">
+        <code>
+         Stream
+        </code>
+       </a>
+       , which defines
+       <code>
+        map
+       </code>
+       ,
+       <code>
+        filter
+       </code>
+       ,
+       <code>
+        reduce
+       </code>
+       , and many other operations.
+      </p>
+      <p>
+       Collection types like
+       <code>
+        List
+       </code>
+       and
+       <code>
+        Set
+       </code>
+       provide a
+       <code>
+        stream()
+       </code>
+       operation that returns a
+       <code>
+        Stream
+       </code>
+       for the collection, and there’s an
+       <code>
+        Arrays.stream
+       </code>
+       function for creating a
+       <code>
+        Stream
+       </code>
+       from an array.
+      </p>
+      <p>
+       Here’s one implementation of
+       <code>
+        allFilesIn
+       </code>
+       in Java with map and filter:
+      </p>
+      <div class="pull-margin">
+       <pre><code class="language-java hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Words</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">static</span> Stream&lt;File&gt; <span class="hljs-title">allFilesIn</span><span class="hljs-params">(File folder)</span> </span>{
+        File[] children = folder.listFiles();
+        Stream&lt;File&gt; descendants = Arrays.stream(children)
+                                         .filter(File::isDirectory)
+                                         .flatMap(Words::allFilesIn);
+        <span class="hljs-keyword">return</span> Stream.concat(descendants,
+                             Arrays.stream(children).filter(File::isFile));
+    }</code></pre>
+      </div>
+      <p>
+       The map-and-flatten pattern is so common that Java provides a
+       <code>
+        flatMap
+       </code>
+       operation to do just that, and we’ve used it instead of defining
+       <code>
+        flatten
+       </code>
+       .
+      </p>
+      <p>
+       Here’s
+       <code>
+        endsWith
+       </code>
+       :
+      </p>
+      <pre><code class="language-java hljs">    <span class="hljs-function"><span class="hljs-keyword">static</span> Predicate&lt;File&gt; <span class="hljs-title">endsWith</span><span class="hljs-params">(String suffix)</span> </span>{
+        <span class="hljs-keyword">return</span> f -&gt; f.getPath().endsWith(suffix);
+    }</code></pre>
+      <p>
+       Given a
+       <code>
+        Stream&lt;File&gt; files
+       </code>
+       , we can now write e.g.
+       <code>
+        files.filter(endsWith(".java"))
+       </code>
+       to obtain a new filtered stream.
+      </p>
+      <div class="handout-solo alert alert-warning">
+       <p>
+        Look at the
+        <a class="alert-link" href="https://github.com/mit6005/sp16-ex25-words/blob/master/src/words/Words3.java">
+         revised Java code for this example
+        </a>
+        .
+       </p>
+       <p>
+        You can compare
+        <a class="alert-link" href="https://github.com/mit6005/sp16-ex25-words/tree/master/src/words">
+         all three versions
+        </a>
+        : the familiar Java implementation, Python with map/filter/reduce, and Java with map/filter/reduce.
+       </p>
+      </div>
+     </div>
+     <h2 id="higher-order_functions_in_java">
+      Higher-order functions in Java
+     </h2>
+     <div data-outline="higher-order_functions_in_java">
+      <p>
+       Map/filter/reduce are of course higher-order functions; so is
+       <code>
+        endsWith
+       </code>
+       above.
+Let’s look at two more that we saw before:
+       <code>
+        compose
+       </code>
+       and
+       <code>
+        chain
+       </code>
+       .
+      </p>
+      <p>
+       The
+       <code>
+        Function
+       </code>
+       interface provides
+       <code>
+        compose
+       </code>
+       — but the implementation is very straightforward.
+In particular, once you get the types of the arguments and return values correct, Java’s static typing makes it pretty much impossible to get the method body wrong:
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment handout-javadoc-comment">/**
+ * Compose two functions.
+ * <span class="hljs-doctag">@param</span> f function A-&gt;B
+ * <span class="hljs-doctag">@param</span> g function B-&gt;C
+ * <span class="hljs-doctag">@return</span> new function A-&gt;C formed by composing f with g
+ */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;A,B,C&gt; <span class="hljs-function">Function&lt;A,C&gt; <span class="hljs-title">compose</span><span class="hljs-params">(Function&lt;A,B&gt; f,
+                                            Function&lt;B,C&gt; g)</span> </span>{
+    <span class="hljs-keyword">return</span> t -&gt; g.apply(f.apply(t));
+    <span class="hljs-comment">// --or--</span>
+    <span class="hljs-comment">// return new Function&lt;A,C&gt;() {</span>
+    <span class="hljs-comment">//     public C apply(A t) { return g.apply(f.apply(t)); }</span>
+    <span class="hljs-comment">// };</span>
+}</code></pre>
+      <p>
+       It turns out that we
+       <em>
+        can’t
+       </em>
+       write
+       <code>
+        chain
+       </code>
+       in strongly-typed Java, because
+       <code>
+        List
+       </code>
+       s (and other collections) must be homogeneous — we can specify a list whose elements are all of type
+       <code>
+        Function&lt;A,B&gt;
+       </code>
+       , but not one whose first element is a
+       <code>
+        Function&lt;A,B&gt;
+       </code>
+       , second is a
+       <code>
+        Function&lt;B,C&gt;
+       </code>
+       , and so on.
+      </p>
+      <p>
+       But here’s
+       <code>
+        chain
+       </code>
+       for functions of the same input/output type:
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment handout-javadoc-comment">/**
+ * Compose a chain of functions.
+ * <span class="hljs-doctag">@param</span> funcs list of functions A-&gt;A to compose
+ * <span class="hljs-doctag">@return</span> function A-&gt;A made by composing list[0] ... list[n-1]
+ */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;A&gt; <span class="hljs-function">Function&lt;A,A&gt; <span class="hljs-title">chain</span><span class="hljs-params">(List&lt;Function&lt;A,A&gt;&gt; funcs)</span> </span>{
+    <span class="hljs-keyword">return</span> funcs.stream().reduce(Function.identity(), Function::compose);
+}</code></pre>
+      <p>
+       Our Python version didn’t use an initial value in the
+       <code>
+        reduce
+       </code>
+       , it required a non-empty list of functions.
+In Java, we’ve provided the identity function (that is,
+       <em>
+        f(t) = t
+       </em>
+       ) as the identity value for the reduction.
+      </p>
+     </div>
+     <h2 id="summary">
+      Summary
+     </h2>
+     <div data-outline="summary">
+      <p>
+       This reading is about modeling problems and implementing systems with
+       <em>
+        immutable data
+       </em>
+       and operations that implement
+       <em>
+        pure functions
+       </em>
+       , as opposed to
+       <em>
+        mutable data
+       </em>
+       and operations with
+       <em>
+        side effects
+       </em>
+       .
+       <em>
+        Functional programming
+       </em>
+       is the name for this style of programming.
+      </p>
+      <p>
+       Functional programming is much easier to do when you have
+       <em>
+        first-class functions
+       </em>
+       in your language and you can build
+       <em>
+        higher-order functions
+       </em>
+       that abstract away control flow code.
+      </p>
+      <p>
+       Some languages —
+       <a href="http://www.haskell.org/">
+        Haskell
+       </a>
+       ,
+       <a href="http://www.scala-lang.org/">
+        Scala
+       </a>
+       ,
+       <a href="http://ocaml.org/">
+        OCaml
+       </a>
+       — are strongly associated with functional programming.
+Many other languages —
+       <a href="https://developer.mozilla.org/en-US/docs/JavaScript">
+        JavaScript
+       </a>
+       ,
+       <a href="https://developer.apple.com/swift/">
+        Swift
+       </a>
+       ,
+       <a href="http://msdn.microsoft.com/en-us/library/67ef8sbd.aspx">
+        several
+       </a>
+       <a href="http://fsharp.org/">
+        .NET
+       </a>
+       <a href="http://msdn.microsoft.com/en-us/vstudio/hh388573.aspx">
+        languages
+       </a>
+       ,
+       <a href="http://www.ruby-lang.org/">
+        Ruby
+       </a>
+       , and so on — use functional programming to a greater or lesser extent.
+With Java’s recently-added functional language features, if you continue programming in Java you should expect to see more functional programming there, too.
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/25-map-filter-reduce/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:30 GMT -->
+</html>
+<!-- Handout delivered Thu Apr 07 2016 20:27:25 GMT-0400 (EDT) -->

@@ -1,0 +1,69 @@
+<?xml-stylesheet href="../../../web/svg-style.css" type="text/css"?>
+<svg width="301" height="152" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:se="http://svg-edit.googlecode.com" preserveAspectRatio="xMinYMin meet">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <defs>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" orient="auto" markerUnits="strokeWidth" id="se_marker_start_svg_4">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m0,50l100,40l-30,-40l30,-40l-100,40z" id="svg_3"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_15">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40l100,40z" id="svg_6"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_14">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40l100,40z" id="svg_16"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_13">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40l100,40z" id="svg_17"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" se_type="rightarrow" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_47">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40z"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" se_type="rightarrow" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_48">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40z"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" se_type="rightarrow" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_49">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40z"/>
+  </marker>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <polyline marker-end="url(#se_marker_end_svg_49)" se:connector="svg_32 svg_42" fill="none" stroke="#000000" points="183,72 210.25,73.37635803222656 237.5,74.1168441772461" id="svg_49"/>
+  <polyline marker-end="url(#se_marker_end_svg_48)" se:connector="svg_31 svg_39" fill="none" stroke="#000000" points="128,72 161.8415069580078,93.4830093383789 207,115.25" id="svg_48"/>
+  <polyline marker-end="url(#se_marker_end_svg_47)" se:connector="svg_30 svg_33" fill="none" stroke="#000000" points="71.43157958984375,72 75.07368469238281,93.625 78.71578979492188,115.25" id="svg_47"/>
+  <g id="svg_27">
+   <rect id="svg_28" stroke="#000000" fill-opacity="0" height="22" width="22" y="62.0625" x="148.625" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" fill="#000000"/>
+   <rect id="svg_29" stroke="#000000" fill-opacity="0" height="22" width="22" y="62.0625" x="170.625" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" fill="#000000"/>
+  </g>
+  <g id="svg_24">
+   <rect id="svg_25" stroke="#000000" fill-opacity="0" height="22" width="22" y="62.0625" x="93.125" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" fill="#000000"/>
+   <rect id="svg_26" stroke="#000000" fill-opacity="0" height="22" width="22" y="62.0625" x="115.125" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" fill="#000000"/>
+  </g>
+  <g id="svg_20">
+   <rect stroke="#000000" fill-opacity="0" id="svg_18" height="22" width="22" y="62.0625" x="38" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" fill="#000000"/>
+   <rect id="svg_19" stroke="#000000" fill-opacity="0" height="22" width="22" y="62.0625" x="60" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" fill="#000000"/>
+  </g>
+  <polyline se:connector="svg_9 svg_12" marker-end="url(#se_marker_end_svg_15)" fill="none" stroke="#000000" points="161,72 205,88.11739349365234 249,103.03913116455078" id="svg_15"/>
+  <polyline se:connector="svg_8 svg_11" marker-end="url(#se_marker_end_svg_14)" fill="none" stroke="#000000" points="105,72 117.45536041259766,88.05000305175781 129.9107208251953,102" id="svg_14"/>
+  <polyline se:connector="svg_7 svg_10" marker-end="url(#se_marker_end_svg_13)" fill="none" stroke="#000000" points="48.744564056396484,72 45.75,87.5 42.755435943603516,102" id="svg_13"/>
+  <polyline se:connector="svg_2 svg_1" stroke="#000000" marker-start="url(#se_marker_start_svg_4)" fill="none" points="64.8372573852539,24 60.13207244873047,20.5 55.426883697509766,17" id="svg_4"/>
+  <text xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" id="svg_1" y="13.5" x="44" stroke-width="0" stroke="#000000" fill="#000000">turtles</text>
+  <ellipse stroke="#000000" fill-opacity="0" ry="37.500001" rx="106.24999" id="svg_2" cy="61.5" cx="115.249988" fill="#000000"/>
+  <text id="svg_5" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="50.5" x="115.249969" stroke-width="0" stroke="#000000" fill="#000000">Map&lt;String,Turtle&gt;</text>
+  <text id="svg_10" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="115" x="41" stroke-width="0" stroke="#000000" fill="#000000">&quot;Buster&quot;</text>
+  <text id="svg_11" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="115.5" x="137.5" stroke-width="0" stroke="#000000" fill="#000000">&quot;Buckminster&quot;</text>
+  <text id="svg_12" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="115" x="271" stroke-width="0" stroke="#000000" fill="#000000">&quot;Bob&quot;</text>
+  <ellipse rx="0.5" id="svg_34" cy="139.5" cx="103.5" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" stroke="#000000" fill="#000000"/>
+  <ellipse id="svg_35" cy="146" cx="66" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" stroke="#000000" fill="#000000"/>
+  <g id="svg_37">
+   <ellipse fill-opacity="0" ry="16.5" rx="29.5" id="svg_33" cy="134.75" cx="82" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke="#000000" fill="#000000"/>
+   <text id="svg_36" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="139.25" x="81.749969" stroke-width="0" stroke="#000000" fill="#000000">Turtle</text>
+  </g>
+  <g id="svg_38">
+   <ellipse id="svg_39" fill-opacity="0" ry="16.5" rx="29.5" cy="134.75" cx="226" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke="#000000" fill="#000000"/>
+   <text id="svg_40" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="139.25" x="225.749969" stroke-width="0" stroke="#000000" fill="#000000">Turtle</text>
+  </g>
+  <g id="svg_41">
+   <ellipse id="svg_42" fill-opacity="0" ry="16.5" rx="29.5" cy="75" cx="270" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke="#000000" fill="#000000"/>
+   <text id="svg_43" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="79.5" x="269.749969" stroke-width="0" stroke="#000000" fill="#000000">Turtle</text>
+  </g>
+ </g>
+</svg>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:34:52 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    6.005: Software Construction
+   </title>
+   <link href="web/handout-style.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-10 col-sm-offset-1" id="6005_software_construction">
+    6.005: Software Construction
+   </h1>
+   <div data-outline="6005_software_construction">
+    <div class="markdown converted col-sm-10 col-sm-offset-1">
+     <div class="row">
+      <div class="col-sm-6 col-sm-push-6">
+       <div class="shortcuts">
+        <h3 id="readings">
+         Readings
+        </h3>
+        <div data-outline="readings">
+         <ul>
+          <li data-active="2016-02-03T17:30:00.000Z">
+           <a href="classes/01-static-checking/index.html">
+            01: Static Checking
+           </a>
+          </li>
+          <li data-active="2016-02-05T17:00:00.000Z">
+           <a href="classes/02-basic-java/index.html">
+            02: Basic Java
+           </a>
+          </li>
+          <li data-active="2016-02-08T17:00:00.000Z">
+           <a href="classes/03-testing/index.html">
+            03: Testing
+           </a>
+          </li>
+          <li data-active="2016-02-10T17:00:00.000Z">
+           <a href="classes/04-code-review/index.html">
+            04: Code Review
+           </a>
+          </li>
+          <li data-active="2016-02-12T17:00:00.000Z">
+           <a href="classes/05-version-control/index.html">
+            05: Version Control
+           </a>
+          </li>
+          <li data-active="2016-02-16T17:00:00.000Z">
+           <a href="classes/06-specifications/index.html">
+            06: Specifications
+           </a>
+          </li>
+          <li data-active="2016-02-17T17:00:00.000Z">
+           <a href="classes/07-designing-specs/index.html">
+            07: Designing Specifications
+           </a>
+          </li>
+          <li data-active="2016-02-19T17:00:00.000Z">
+           <a href="classes/08-avoiding-debugging/index.html">
+            08: Avoiding Debugging
+           </a>
+          </li>
+          <li data-active="2016-02-22T17:00:00.000Z">
+           <a href="classes/09-immutability/index.html">
+            09: Mutability &amp; Immutability
+           </a>
+          </li>
+          <li data-active="2016-02-24T17:00:00.000Z">
+           <a href="classes/10-recursion/index.html">
+            10: Recursion
+           </a>
+          </li>
+          <li data-active="2016-02-26T17:00:00.000Z">
+           <a href="classes/11-debugging/index.html">
+            11: Debugging
+           </a>
+          </li>
+          <li data-active="2016-02-29T17:00:00.000Z">
+           <a href="classes/12-abstract-data-types/index.html">
+            12: Abstract Data Types
+           </a>
+          </li>
+          <li data-active="2016-03-02T17:00:00.000Z">
+           <a href="classes/13-abstraction-functions-rep-invariants/index.html">
+            13: Abstraction Functions &amp; Rep Invariants
+           </a>
+          </li>
+          <li data-active="2016-03-04T17:00:00.000Z">
+           <a href="classes/14-interfaces/index.html">
+            14: Interfaces
+           </a>
+          </li>
+          <li data-active="2016-03-07T17:00:00.000Z">
+           <a href="classes/15-equality/index.html">
+            15: Equality
+           </a>
+          </li>
+          <li data-active="2016-03-09T17:00:00.000Z">
+           <a href="classes/16-recursive-data-types/index.html">
+            16: Recursive Data Types
+           </a>
+          </li>
+          <li data-active="2016-03-16T16:00:00.000Z">
+           <a href="classes/17-regex-grammars/index.html">
+            17: Regular Expressions &amp; Grammars
+           </a>
+          </li>
+          <li data-active="2016-03-18T16:00:00.000Z">
+           <a href="classes/18-parser-generators/index.html">
+            18: Parser Generators
+           </a>
+          </li>
+          <li data-active="2016-03-28T16:00:00.000Z">
+           <a href="classes/19-concurrency/index.html">
+            19: Concurrency
+           </a>
+          </li>
+          <li data-active="2016-03-30T16:00:00.000Z">
+           <a href="classes/20-thread-safety/index.html">
+            20: Thread Safety
+           </a>
+          </li>
+          <li data-active="2016-04-01T16:00:00.000Z">
+           <a href="classes/21-sockets-networking/index.html">
+            21: Sockets &amp; Networking
+           </a>
+          </li>
+          <li data-active="2016-04-04T16:00:00.000Z">
+           <a href="classes/22-queues/index.html">
+            22: Queues &amp; Message-Passing
+           </a>
+          </li>
+          <li data-active="2016-04-06T16:00:00.000Z">
+           <a href="classes/23-locks/index.html">
+            23: Locks &amp; Synchronization
+           </a>
+          </li>
+          <li data-active="2016-04-08T16:00:00.000Z">
+           <a href="classes/24-graphical-user-interfaces/index.html">
+            24: Graphical User Interfaces
+           </a>
+          </li>
+          <li data-active="2016-04-11T16:00:00.000Z">
+           <a href="classes/25-map-filter-reduce/index.html">
+            25: Map, Filter, Reduce
+           </a>
+          </li>
+          <li data-active="2016-04-13T16:00:00.000Z">
+           <a href="classes/26-little-languages/index.html">
+            26: Little Languages
+           </a>
+          </li>
+          <li data-active="2016-04-25T16:00:00.000Z">
+           <a href="classes/27-team-version-control/index.html">
+            27: Team Version Control
+           </a>
+          </li>
+         </ul>
+         <span>
+         </span>
+         <ul>
+          <li>
+           <a href="https://github.com/mit6005/">
+            <img alt="" src="general/icons/github.ico" title="">
+             Example Code on GitHub
+            </img>
+           </a>
+          </li>
+         </ul>
+        </div>
+       </div>
+      </div>
+      <div class="col-sm-6 col-sm-pull-6">
+       <div class="shortcuts">
+        <h3 id="general">
+         General
+        </h3>
+        <div data-outline="general">
+         <ul>
+          <li>
+           <a href="general/index.html">
+            <strong>
+             General Information
+            </strong>
+           </a>
+          </li>
+          <li>
+           <a href="general/collaboration.html">
+            Collaboration and Public Sharing
+           </a>
+          </li>
+          <li>
+           <a href="general/code-review.html">
+            Code Reviewing
+           </a>
+          </li>
+          <li>
+           <a href="general/nanoquiz-grading.html">
+            Nanoquiz Grading and Makeups
+           </a>
+          </li>
+         </ul>
+        </div>
+        <h3 id="getting_started">
+         Getting Started
+        </h3>
+        <div data-outline="getting_started">
+         <ul>
+          <li data-active="2016-02-06T04:00:00.000Z">
+           <a href="getting-started/index.html">
+            Getting Started: Java, Eclipse, &amp; Git
+           </a>
+          </li>
+          <li>
+           <a href="getting-started/java.html">
+            Getting Started: Java
+           </a>
+          </li>
+          <li>
+           <a href="getting-started/eclipse.html">
+            Getting Started: Eclipse FAQ
+           </a>
+          </li>
+         </ul>
+        </div>
+        <h3 id="problem_sets">
+         Problem Sets
+        </h3>
+        <div data-outline="problem_sets">
+         <ul>
+          <li data-active="2016-02-17T04:00:00.000Z">
+           <a href="psets/ps0/index.html">
+            0: Turtle Graphics
+           </a>
+          </li>
+          <li data-active="2016-03-02T04:00:00.000Z">
+           <a href="psets/ps1/index.html">
+            1: Tweet Tweet
+           </a>
+          </li>
+          <li data-active="2016-03-16T03:00:00.000Z">
+           <a href="psets/ps2/index.html">
+            2: Poetic Walks
+           </a>
+          </li>
+          <li data-active="2016-04-06T03:00:00.000Z">
+           <a href="psets/ps3/index.html">
+            3: Expressivo
+           </a>
+          </li>
+          <li data-active="2016-04-20T03:00:00.000Z">
+           <a href="psets/ps4/index.html">
+            4: Multiplayer Minesweeper
+           </a>
+          </li>
+         </ul>
+        </div>
+        <h3 id="project">
+         Project
+        </h3>
+        <div data-outline="project">
+         <ul>
+          <li data-active="2016-05-11T15:00:00.000Z">
+           <a href="projects/abcplayer/index.html">
+            ABC Music Player
+           </a>
+          </li>
+         </ul>
+        </div>
+        <h3 id="quizzes">
+         Quizzes
+        </h3>
+        <div data-outline="quizzes">
+         <ul>
+          <li>
+           <a href="http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/quizzes/MIT6_005S16_Quiz1.pdf">
+            Quiz 1
+           </a>
+           and
+           <a href="http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/quizzes/MIT6_005S16_Quiz1_soln.pdf">
+            Quiz 1 solutions
+           </a>
+          </li>
+          <li>
+           <p>
+            <a href="http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/quizzes/MIT6_005S16_Quiz2.pdf">
+             Quiz 2
+            </a>
+            and
+            <a href="http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/quizzes/MIT6_005S16_Quiz2_soln.pdf">
+             Quiz 2 solutions
+            </a>
+           </p>
+          </li>
+          <li>
+           <p>
+            <a href="quizzes/archive/index.html">
+             Quiz Archive
+            </a>
+           </p>
+          </li>
+         </ul>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <style>
+     /* Home styles */
+.shortcuts ul { padding-left: 0; }
+.shortcuts ul li { list-style-type: none; margin-bottom: 1px; }
+.shortcuts ul li a, .info a { color: #966; }
+.shortcuts ul li a:hover, .info a:hover { color: #933; }
+.shortcuts ul li img:first-child { height: 16px; width: 16px; position: relative; bottom: 2px; }
+.shortcuts ul li .glyphicon:first-child { font-size: 16px; }
+.shortcuts ul li.active { font-weight: bold; }
+h4 { margin-top: 20px; }
+h3:first-child, h4:first-child { margin-top: 10px; }
+    </style>
+    <script>
+     /* Home script */
+window.onHandoutWillRender = function(converter) {
+  // icon URLs
+  converter.hooks.chain('postConversion', function(html) {
+    return html.replace(/="icon:/g, function() {
+      return '="../../general/handout/icons/';
+    });
+  });
+  // announcements
+  announcements($('#announcements'), { recent: true });
+}
+window.onHandoutDidRender = function() {
+  // wider content
+  $('.col-sm-8.col-sm-offset-2')
+    .removeClass('col-sm-8 col-sm-offset-2')
+    .addClass('col-sm-10 col-sm-offset-1');
+  // active
+  $('li').each(function() {
+    var li = $(this);
+    this.innerHTML = this.innerHTML.replace(/\{(.+)\}$/, function(item, date) {
+      li.attr('data-active', new Date(date).toISOString());
+      return '';
+    });
+  })
+  // announcements
+  if (HANDOUT_PREVIEW) { announceable($('#announcements')); }
+}
+window.onHandoutReady = function() {
+  // active
+  $('ul').each(function() {
+    $('li[data-active]', this).removeClass('active');
+    $('li[data-active]', this).each(function() {
+      if (new Date($(this).data('active')) > new Date()) {
+        $(this).addClass('active');
+        return false;
+      }
+    });
+  })
+}
+    </script>
+   </div>
+  </main>
+  <footer>
+   MIT EECS
+  </footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:35:06 GMT -->
+</html>
+<!-- Handout delivered Wed May 18 2016 20:32:46 GMT-0400 (EDT) -->

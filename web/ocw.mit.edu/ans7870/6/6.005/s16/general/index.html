@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/general/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:30 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    General Information &amp; FAQ
+   </title>
+   <link href="../web/handout-style.css" rel="stylesheet">
+    <style>
+     /* FAQ styles */
+.faq.well {
+  padding: 10px;
+  background: none;
+  color: #444;
+}
+.faq > :first-child { margin-top: 0; }
+.faq > :last-child > :last-child,
+.faq > :last-child > :last-child > :last-child,
+.faq > :last-child > :last-child > :last-child > :last-child { margin-bottom: 0; }
+.faq h3 {
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  margin-bottom: 0;
+  padding-bottom: 10px;
+}
+.faq h3 > a {
+  position: absolute;
+  top: 0;
+  left: -27px;
+  color: #933;
+}
+.faq h3:target,
+.faq h3:target + div { background: #ffe; }
+.faq h3 + div > p { padding-left: 20px; }
+    </style>
+    <script>
+     /* FAQ script */
+// duplicate reusable references block
+window.onHandoutWillRender = function() {
+  var refs = $('#references').remove().text();
+  $('.markdown, .markdown div').prepend(refs);
+}
+// add question links
+window.onHandoutDidRender = function() {
+  $('h3').each(function() {
+    $(this).append($('<a>').attr('href', '#' + this.id).text('#'));
+  });
+}
+    </script>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="../index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#general_information_faq">
+      General Information &amp; FAQ
+     </a>
+    </li>
+    <li>
+     <a href="#objectives">
+      Objectives
+     </a>
+    </li>
+    <li>
+     <a href="#classes_readings_and_nanoquizzes">
+      Classes, readings, and nanoquizzes
+     </a>
+    </li>
+    <li>
+     <a href="#problem_sets_beta_final_and_slack_days">
+      Problem sets, beta &amp; final, and slack days
+     </a>
+    </li>
+    <li>
+     <a href="#projects_and_quizzes">
+      Projects and quizzes
+     </a>
+    </li>
+    <li>
+     <a href="#collaboration_and_public_sharing">
+      Collaboration and public sharing
+     </a>
+    </li>
+    <li>
+     <a href="#grading">
+      Grading
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="general_information_faq">
+    General Information &amp; FAQ
+   </h1>
+   <div data-outline="general_information_faq">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <h2 id="objectives">
+      Objectives
+     </h2>
+     <div data-outline="objectives">
+      <p>
+       See the
+       <a href="https://gmap.csail.mit.edu/gmap/public.html?focus=6.005">
+        6.005 Curricular Goals Map
+       </a>
+       giving a dynamic graphical display connecting the class outcomes with the outcomes of other subjects in the Course 6 curriculum.
+      </p>
+     </div>
+     <h2 id="classes_readings_and_nanoquizzes">
+      Classes, readings, and nanoquizzes
+     </h2>
+     <div data-outline="classes_readings_and_nanoquizzes">
+      <p>
+       <strong>
+        Class meetings.
+       </strong>
+       There are two 90-minute class meetings each week on Monday and Wednesday and one 1-hour class meeting each week on Friday.
+You are expected to attend all class meetings and to participate actively in exercises and discussions.
+      </p>
+      <p>
+       <strong>
+        Laptops required.
+       </strong>
+       Classes will include multiple-choice questions and programming exercises that require a laptop.
+       <p>
+        <strong>
+         Readings.
+        </strong>
+        Most classes will have a reading that you must read before coming to class.
+There is no course textbook.
+       </p>
+       <p>
+        <strong>
+         Nanoquizzes.
+        </strong>
+        Every class meeting will begin with a short quiz on the required reading for the class, plus recent class meetings.
+Nanoquizzes are closed-book and closed-notes, with a 3-minute time limit. 
+There will be approximately 25 nanoquizzes.
+Your lowest 5 nanoquiz grades will be automatically dropped, and you can make up missed nanoquizzes or low grades.
+More info:
+        <strong>
+         <a href="nanoquiz-grading.html">
+          details of nanoquiz grading and makeup
+         </a>
+        </strong>
+        .
+       </p>
+       <div class="well faq">
+        <h3 id="why_is_6005_structured_the_way_it_is">
+         Why is 6.005 structured the way it is?
+         <a href="#why_is_6005_structured_the_way_it_is">
+          #
+         </a>
+        </h3>
+        <div data-outline="why_is_6005_structured_the_way_it_is">
+         <p>
+          <em>
+           Practice and feedback
+          </em>
+          are key to learning, and 6.005 is structured to provide as many opportunities for practice and feedback as possible.
+That means we don’t want to spend class time on lectures, we want to spend it on exercises to practice the concepts and skills of building software.
+         </p>
+         <p>
+          Citations:
+          <a href="http://www.cwsei.ubc.ca/resources/files/CourseTransformationGuide_CWSEI_CU-SEI.pdf">
+           Wieman et al.,
+           <em>
+            Course Transformation Guide
+           </em>
+          </a>
+          ·
+          <a href="http://www.sciencemag.org/content/332/6031/862.full">
+           Deslauriers et al.,
+           <em>
+            Improved Learning in a Large-Enrollment Physics Class
+           </em>
+          </a>
+         </p>
+        </div>
+        <h3 id="why_is_attendance_in_class_required">
+         Why is attendance in class required?
+         <a href="#why_is_attendance_in_class_required">
+          #
+         </a>
+        </h3>
+        <div data-outline="why_is_attendance_in_class_required">
+         <p>
+          Class meetings are all about
+          <em>
+           practice and feedback
+          </em>
+          .
+The individual, pair, and small group questions, exercises, and coding problems we work on in class, and the discussions and feedback led by instructors, are a required component of 6.005.
+         </p>
+         <p>
+          Class is like swim/judo/math team practice: you don’t get good unless you show up, and practicing with others is a necessary complement to practicing alone.
+         </p>
+        </div>
+        <h3 id="why_are_we_sometimes_asked_to_close_laptops_during_class">
+         Why are we sometimes asked to close laptops during class?
+         <a href="#why_are_we_sometimes_asked_to_close_laptops_during_class">
+          #
+         </a>
+        </h3>
+        <div data-outline="why_are_we_sometimes_asked_to_close_laptops_during_class">
+         <p>
+          Your laptop is a necessary tool for in-class programming, but it also presents a huge opportunity for distraction.
+The price of that distraction is paid not only by you, but by all those around you who can see your screen.
+In one study linked below:
+         </p>
+         <ul>
+          <li>
+           For note-takers with laptops, multi-tasking led to a 11% drop in comprehension test scores.
+          </li>
+          <li>
+           For note-takers without laptops, merely having a laptop multi-tasker in their field of view led to a 17% drop in comprehension test scores!
+          </li>
+         </ul>
+         <p>
+          If you want to use a smartphone in your lap, so that the screen is not visible and not distracting to others, we have no objection, but you’ll still be hurting yourself.
+         </p>
+         <p>
+          Citations:
+          <a href="http://www.sciencedirect.com/science/article/pii/S0360131512002254">
+           Sana et al.,
+           <em>
+            Laptop multitasking hinders classroom learning for both users and nearby peers
+           </em>
+          </a>
+          ·
+          <a href="http://pss.sagepub.com/content/25/6/1159.full">
+           Mueller and Oppenheimer,
+           <em>
+            The Pen Is Mightier Than the Keyboard
+           </em>
+          </a>
+         </p>
+        </div>
+        <h3 id="how_is_participation_in_class_graded">
+         How is participation in class graded?
+         <a href="#how_is_participation_in_class_graded">
+          #
+         </a>
+        </h3>
+        <div data-outline="how_is_participation_in_class_graded">
+         <p>
+          In general, participation in class is graded based on whether you attempted the questions, exercises, coding problems, etc., not on correctness.
+         </p>
+         <p>
+          Programming exercises are graded based on whether you’ve attempted the exercise and made some progress, even if you don’t complete it.
+You are not expected to complete unfinished exercises after class, but TAs and LAs will be happy to help you review or finish them.
+         </p>
+        </div>
+        <h3 id="why_do_i_need_to_read_the_readings_and_complete_the_reading_exercises_the_night_before_coming_to_class">
+         Why do I need to read the readings and complete the reading exercises the night before coming to class?
+         <a href="#why_do_i_need_to_read_the_readings_and_complete_the_reading_exercises_the_night_before_coming_to_class">
+          #
+         </a>
+        </h3>
+        <div data-outline="why_do_i_need_to_read_the_readings_and_complete_the_reading_exercises_the_night_before_coming_to_class">
+         <p>
+          Reading the material before class prepares you to spend class time
+          <em>
+           practicing
+          </em>
+          the concepts and skills you’re learning.
+Reading in advance gives you time to think and ask questions, and repeated exposure to material spaced out over time improves learning.
+         </p>
+         <p>
+          See:
+          <a href="https://en.wikipedia.org/wiki/Spacing_effect">
+           Spacing effect
+          </a>
+         </p>
+        </div>
+        <h3 id="why_does_the_class_have_nanoquizzes_on_topics_before_we_practice_them_in_class">
+         Why does the class have nanoquizzes on topics before we practice them in class?
+         <a href="#why_does_the_class_have_nanoquizzes_on_topics_before_we_practice_them_in_class">
+          #
+         </a>
+        </h3>
+        <div data-outline="why_does_the_class_have_nanoquizzes_on_topics_before_we_practice_them_in_class">
+         <p>
+          Nanoquizzes assess whether you did the reading and practiced with the reading exercises before coming to class, and they provide feedback to you on your comprehension.
+Nanoquizzes are themselves part of the practice we do in class: recalling information from the readings benefits learning more than just re-reading or re-hearing it.
+         </p>
+         <p>
+          See:
+          <a href="https://en.wikipedia.org/wiki/Testing_effect">
+           Testing effect
+          </a>
+         </p>
+        </div>
+       </div>
+      </p>
+     </div>
+     <h2 id="problem_sets_beta_final_and_slack_days">
+      Problem sets, beta &amp; final, and slack days
+     </h2>
+     <div data-outline="problem_sets_beta_final_and_slack_days">
+      <p>
+       <strong>
+        Problem sets.
+       </strong>
+       To consolidate your understanding of the ideas from class, you will do five problem sets, PS0 to PS4, involving both design and implementation work.
+Problem sets will be done individually.
+More info:
+       <strong>
+        <a href="collaboration.html#problem_sets">
+         collaboration on problem sets
+        </a>
+       </strong>
+       .
+      </p>
+      <p>
+       <strong>
+        Code review.
+       </strong>
+       As part of each problem set, there will be a 2-day code-reviewing period when other students and staff will give you feedback about the code you submitted, using a web-based system.
+You will be expected to participate in this process by reviewing some of your classmates’ code.
+More details about objectives and guidelines for the code reviewing process:
+       <strong>
+        <a href="code-review.html">
+         code reviewing
+        </a>
+       </strong>
+       .
+      </p>
+      <p>
+       <strong>
+        Beta and final submission.
+       </strong>
+       Each problem set will have beta and final submission.
+The beta submission will be graded by an automated tester, and will be subject to code review.
+The final submission is due a week later.
+You will be expected to fix any failed test cases and revise your code based on code review feedback.
+      </p>
+      <p>
+       The final submission must address all the code reviews received by the beta submission – all the human comments plus all the automated checkstyle comments that are marked #important.
+You can address a code review either by changing the code to reflect the review or by including a source code comment in your code that explains why the code wasn’t changed.
+If code reviews are unclear, you can discuss them with the reviewers, but you still must edit your own code in reaction to the review.
+A grader will check the submission and deduct points if it hasn’t addressed the code reviews.
+      </p>
+      <p>
+       Since the final submission inevitably happens after code review for the problem set, it’s understood that you’ve looked at other students’ written solutions, and been inspired by other ways to solve the problems.
+You must be exceedingly scrupulous, therefore, in not using those written solutions during your revision.
+Both your original code and your revised code must be your own.
+Looking at other students’ answers to the problem set while you are revising your solution will be considered a violation of the
+       <a href="collaboration.html#problem_sets">
+        collaboration policy
+       </a>
+       .
+      </p>
+      <div class="well faq">
+       <h3 id="how_is_the_overall_grade_for_a_problem_set_determined">
+        How is the overall grade for a problem set determined?
+        <a href="#how_is_the_overall_grade_for_a_problem_set_determined">
+         #
+        </a>
+       </h3>
+       <div data-outline="how_is_the_overall_grade_for_a_problem_set_determined">
+        <p>
+         The overall grade for a problem set will
+         <strong>
+          typically
+         </strong>
+         be computed as follows:
+        </p>
+        <p>
+         overall grade = 40% × beta-autograde + 45% × final-autograde + 15% × manual-grade
+        </p>
+        <p>
+         where beta-autograde and final-autograde are determined by automated tests, and manual-grade is determined by graders reading the code.
+One part of manual-grade is fixing code in response to code reviews.
+        </p>
+        <p>
+         The breakdown may vary by 5-10% from problem set to problem set, depending on how much of the problem set can be autograded and how much requires human eyes.
+Each problem set’s breakdown will be announced when final grades are released.
+        </p>
+       </div>
+       <div data-outline="can_i_use_slack_days_on_assignments_other_than_problem_sets">
+        <p>
+        </p>
+       </div>
+      </div>
+     </div>
+     <h2 id="projects_and_quizzes">
+      Projects and quizzes
+     </h2>
+     <div data-outline="projects_and_quizzes">
+      <p>
+       <strong>
+        Project.
+       </strong>
+       You will complete a group software development project at the end of the semester.
+The project will be done in teams of three students.
+Each team member is required to participate roughly equally in every activity (design, implementation, test, documentation), and we may ask for an accounting of what each team member did.
+A single grade will be assigned to all members of the team.
+      </p>
+      <p>
+       <strong>
+        Team meetings.
+       </strong>
+       During the project, 
+ you and your project team will meet with your TA to discuss the work.
+Your TA will assign a grade based in part on this meeting.
+Team meetings will usually be scheduled during class times that will be reserved for this purpose.
+      </p>
+      <p>
+       <strong>
+        Quizzes.
+       </strong>
+       There will be two quizzes, on dates specified on the course calendar.
+Each quiz will be comprehensive, drawing on any topics covered up to that point in the course, so e.g. Quiz 2 may include topics that were already covered on Quiz 1.
+      </p>
+      <div class="well faq">
+       <h3 id="are_quizzes_closed-book">
+        Are quizzes closed-book?
+        <a href="#are_quizzes_closed-book">
+         #
+        </a>
+       </h3>
+       <div data-outline="are_quizzes_closed-book">
+        <p>
+         Yes, but you may bring a single 8.5×11” double-sided page of notes, readable without magnification, that was created by you.
+Since the process of creating a crib sheet is most of its benefit, you may not share these notes or use someone else’s.
+        </p>
+       </div>
+       <h3 id="are_past_quizzes_available">
+        Are past quizzes available?
+        <a href="#are_past_quizzes_available">
+         #
+        </a>
+       </h3>
+       <div data-outline="are_past_quizzes_available">
+        <p>
+         Yes, in the archive of
+         <a href="../quizzes/archive/index.html">
+          past quizzes
+         </a>
+         .
+        </p>
+       </div>
+      </div>
+     </div>
+     <h2 id="collaboration_and_public_sharing">
+      Collaboration and public sharing
+     </h2>
+     <div data-outline="collaboration_and_public_sharing">
+      <p>
+       This topic has its own page:
+       <a href="collaboration.html">
+        <strong>
+         collaboration and public sharing
+        </strong>
+       </a>
+       .
+      </p>
+     </div>
+     <h2 id="grading">
+      Grading
+     </h2>
+     <div data-outline="grading">
+      <p>
+       The relative contributions of the various elements to your grade are:
+      </p>
+      <ul>
+       <li>
+        <strong>
+         Quizzes: 30%.
+        </strong>
+        Nanoquizzes are worth 10% total, and each comprehensive quiz is worth 10%.
+       </li>
+       <li>
+        <strong>
+         Problem sets: 50%.
+        </strong>
+        PS0 is worth 6%, and PS1-PS4 are each worth 11%.
+       </li>
+       <li>
+        <strong>
+         Project: 10%.
+        </strong>
+       </li>
+       <li>
+        <strong>
+         Code review: 5%.
+        </strong>
+        Judged by regular participation in code review and providing substantive, useful comments.
+       </li>
+       <li>
+        <strong>
+         Participation: 5%.
+        </strong>
+        Reflects your continuous participation in the course.
+Determined by completion of reading exercises, participation in class and in the online Piazza forum.
+       </li>
+      </ul>
+      <p>
+       Letter grades are determined at the end of the semester.
+The default cutoffs are: a final average of 90 and above is an A, 80 and above is a B, 70 and above is a C.
+These boundaries may be adjusted downwards if necessary because of the difficulty of the assignments or quizzes, but the boundaries will never be adjusted upwards, so a final average of 90 is guaranteed to be an A.
+The boundary adjustment is done heuristically, and there are no grade quotas, no grade targets, and no centering of the class on a particular grade boundary.
+      </p>
+      <p>
+       Every student is considered individually in the final grading meeting, judging from their entire performance in the course.
+A single bad mark in an otherwise consistent record will often be discounted.
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+  <footer>
+   MIT EECS
+  </footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/general/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:30 GMT -->
+</html>
+<!-- Handout delivered Tue Mar 15 2016 14:55:02 GMT-0400 (EDT) -->

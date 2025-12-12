@@ -1,0 +1,34 @@
+<?xml-stylesheet href="../../../web/svg-style.css" type="text/css"?>
+<svg width="260" height="115" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:se="http://svg-edit.googlecode.com" preserveAspectRatio="xMinYMin meet">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <defs>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" orient="auto" markerUnits="strokeWidth" id="se_marker_start_svg_4">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m0,50l100,40l-30,-40l30,-40l-100,40z" id="svg_3"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" se_type="rightarrow" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_15">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40z"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" se_type="rightarrow" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_14">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40z"/>
+  </marker>
+  <marker refY="50" refX="50" markerHeight="5" markerWidth="5" viewBox="0 0 100 100" se_type="rightarrow" orient="auto" markerUnits="strokeWidth" id="se_marker_end_svg_13">
+   <path stroke-width="10" stroke="#000000" fill="#000000" d="m100,50l-100,40l30,-40l-30,-40z"/>
+  </marker>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <polyline marker-end="url(#se_marker_end_svg_15)" se:connector="svg_9 svg_12" fill="none" stroke="#000000" points="122,69.16666412353516 144.75,72.95832824707031 167.5,76.75" id="svg_15"/>
+  <polyline marker-end="url(#se_marker_end_svg_14)" se:connector="svg_8 svg_11" fill="none" stroke="#000000" points="101,71.43877410888672 116.01388549804688,82.46939086914062 131.02777099609375,93.5" id="svg_14"/>
+  <polyline marker-end="url(#se_marker_end_svg_13)" se:connector="svg_7 svg_10" fill="none" stroke="#000000" points="74.76388549804688,77 74.53472137451172,85.25 74.30555725097656,93.5" id="svg_13"/>
+  <polyline stroke="#000000" se:connector="svg_2 svg_1" marker-start="url(#se_marker_start_svg_4)" fill="none" points="54.109371185302734,29 45.296875,23 36.484375,17" id="svg_4"/>
+  <text xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" id="svg_1" y="13" x="24" stroke-width="0" stroke="#000000" fill="#000000">cities</text>
+  <ellipse stroke="#000000" fill-opacity="0" ry="27.5" rx="66.499997" id="svg_2" cy="56.500001" cx="94.499995" fill="#000000"/>
+  <text xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="73" x="75" stroke-width="0" stroke="#000000" fill="#000000" id="svg_7">0</text>
+  <text xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="73" x="97" stroke-width="0" stroke="#000000" fill="#000000" id="svg_8">1</text>
+  <text xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="73" x="118" stroke-width="0" stroke="#000000" fill="#000000" id="svg_9">2</text>
+  <text id="svg_5" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="52" x="95.499992" stroke-width="0" stroke="#000000" fill="#000000">List&lt;String&gt;</text>
+  <text id="svg_10" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="109" x="74" stroke-width="0" stroke="#000000" fill="#000000">&quot;Boston&quot;</text>
+  <text id="svg_11" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="109" x="146" stroke-width="0" stroke="#000000" fill="#000000">&quot;Bogot&#x00e1;&quot;</text>
+  <text id="svg_12" xml:space="preserve" text-anchor="middle" font-family="Monospace" font-size="14" y="89" x="214" stroke-width="0" stroke="#000000" fill="#000000">&quot;Barcelona&quot;</text>
+ </g>
+</svg>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/19-concurrency/anonymous-runnable/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:37:19 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    Reading 19, Sidebar: Anonymous Runnable
+   </title>
+   <link href="../../../web/handout-style.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="../../../index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#reading_19_sidebar_anonymous_runnable">
+      Reading 19, Sidebar: Anonymous Runnable
+     </a>
+    </li>
+    <li>
+     <a href="#anonymous_classes">
+      Anonymous classes
+     </a>
+    </li>
+    <li>
+     <a href="#using_an_anonymous_runnable_to_start_a_thread">
+      Using an anonymous Runnable to start a thread
+     </a>
+    </li>
+    <li>
+     <a href="#back_to_concurrency">
+      Back to Concurrency
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <iframe class="exercises-status" src="https://6005.mit.edu/handx/sp16/status.php">
+   </iframe>
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="reading_19_sidebar_anonymous_runnable">
+    Reading 19, Sidebar: Anonymous Runnable
+   </h1>
+   <div data-outline="reading_19_sidebar_anonymous_runnable">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <h2 id="anonymous_classes">
+      Anonymous classes
+     </h2>
+     <div data-outline="anonymous_classes">
+      <p>
+       Usually when we implement an interface, we do so by declaring a class.
+For example, given the interface
+       <a href="http://docs.oracle.com/javase/8/docs/api/?java/util/Comparator.html">
+        <code>
+         Comparator
+        </code>
+       </a>
+       in the Java API:
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment handout-javadoc-comment">/** A comparison function that imposes a total ordering on some objects.
+ *  ... */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Comparator</span>&lt;<span class="hljs-title">T</span>&gt; </span>{
+    <span class="hljs-comment handout-javadoc-comment">/** Compares its two arguments for order.
+     *  ...
+     *  <span class="hljs-doctag">@return</span> a negative integer, zero, or a positive integer if the first
+     *          argument is less than, equal to, or greater than the second */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(T o1, T o2)</span></span>;
+}</code></pre>
+      <p>
+       We might declare:
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment handout-javadoc-comment">/** Orders Strings by length (shorter first) and then lexicographically. */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringLengthComparator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Comparator</span>&lt;<span class="hljs-title">String</span>&gt; </span>{
+    <span class="hljs-meta">@Override</span> <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(String s1, String s2)</span> </span>{
+        <span class="hljs-keyword">if</span> (s1.length() == s1.length()) {
+            <span class="hljs-keyword">return</span> s1.compareTo(s2);
+        }
+        <span class="hljs-keyword">return</span> s1.length() - s2.length();
+    }
+}</code></pre>
+      <p>
+       One purpose of
+       <code>
+        Comparator
+       </code>
+       is for sorting.
+A
+       <a href="http://docs.oracle.com/javase/8/docs/api/?java/util/SortedSet.html">
+        <code>
+         SortedSet
+        </code>
+       </a>
+       keeps its items in a total order.
+      </p>
+      <p>
+       Without a
+       <code>
+        Comparator
+       </code>
+       , the
+       <code>
+        SortedSet
+       </code>
+       implementation uses the
+       <code>
+        compareTo
+       </code>
+       method provided by the objects in the set:
+      </p>
+      <pre><code class="language-java hljs">SortedSet&lt;String&gt; strings = <span class="hljs-keyword">new</span> TreeSet&lt;&gt;();
+strings.addAll(Arrays.asList(<span class="hljs-string">"yolanda"</span>, <span class="hljs-string">"zach"</span>, <span class="hljs-string">"alice"</span>, <span class="hljs-string">"bob"</span>));
+<span class="hljs-comment">// strings is { "alice", "bob", "yolanda", "zach" }</span></code></pre>
+      <p>
+       With a
+       <code>
+        Comparator
+       </code>
+       :
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment">// uses StringLengthComparator declared above</span>
+Comparator&lt;String&gt; compareByLength = <span class="hljs-keyword">new</span> StringLengthComparator();
+SortedSet&lt;String&gt; strings = <span class="hljs-keyword">new</span> TreeSet&lt;&gt;(compareByLength);
+strings.addAll(Arrays.asList(<span class="hljs-string">"yolanda"</span>, <span class="hljs-string">"zach"</span>, <span class="hljs-string">"alice"</span>, <span class="hljs-string">"bob"</span>));
+<span class="hljs-comment">// strings is { "bob", "zach", "alice", "yolanda" }</span></code></pre>
+      <p>
+       If we only intend to use this comparator in this one place, we already know how to eliminate the variable:
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment">// uses StringLengthComparator declared above</span>
+SortedSet&lt;String&gt; strings = <span class="hljs-keyword">new</span> TreeSet&lt;&gt;(<span class="hljs-keyword">new</span> StringLengthComparator());
+strings.addAll(Arrays.asList(<span class="hljs-string">"yolanda"</span>, <span class="hljs-string">"zach"</span>, <span class="hljs-string">"alice"</span>, <span class="hljs-string">"bob"</span>));
+<span class="hljs-comment">// strings is { "bob", "zach", "alice", "yolanda" }</span></code></pre>
+      <p>
+       An
+       <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/anonymousclasses.html">
+        <strong>
+         anonymous class
+        </strong>
+       </a>
+       declares an unnamed class that implements an interface and immediately creates the one and only instance of that class.
+Compare to the code above:
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-comment">// no StringLengthComparator class!</span>
+SortedSet&lt;String&gt; strings = <span class="hljs-keyword">new</span> TreeSet&lt;&gt;(<span class="hljs-keyword">new</span> Comparator&lt;String&gt;() {
+    <span class="hljs-meta">@Override</span> <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(String s1, String s2)</span> </span>{
+        <span class="hljs-keyword">if</span> (s1.length() == s1.length()) {
+            <span class="hljs-keyword">return</span> s1.compareTo(s2);
+        }
+        <span class="hljs-keyword">return</span> s1.length() - s2.length();
+    }
+});
+strings.addAll(Arrays.asList(<span class="hljs-string">"yolanda"</span>, <span class="hljs-string">"zach"</span>, <span class="hljs-string">"alice"</span>, <span class="hljs-string">"bob"</span>));
+<span class="hljs-comment">// strings is { "bob", "zach", "alice", "yolanda" }</span></code></pre>
+      <p>
+       <strong>
+        Pros:
+       </strong>
+      </p>
+      <ul>
+       <li>
+        <p>
+         If we’re only using the comparator in this one piece of code, we’ve reduced its scope.
+Previously, any other code could start using and depending on
+         <code>
+          StringLengthComparator
+         </code>
+         .
+        </p>
+       </li>
+       <li>
+        <p>
+         A reader no longer has to search elsewhere for the details of the comparator, everything is right here.
+        </p>
+       </li>
+      </ul>
+      <p>
+       <strong>
+        Cons:
+       </strong>
+      </p>
+      <ul>
+       <li>
+        <p>
+         If we need the same comparator more than once, we might be tempted to copy-and-paste.
+The old way is DRY.
+        </p>
+       </li>
+       <li>
+        <p>
+         If the implementation of the comparator is long, it interrupts the surrounding code, making it harder to understand.
+The old way is broken into modular pieces.
+        </p>
+       </li>
+      </ul>
+      <p>
+       So anonymous classes are good for short one-off implementations of a method.
+      </p>
+     </div>
+     <h2 id="using_an_anonymous_runnable_to_start_a_thread">
+      Using an anonymous
+      <code>
+       Runnable
+      </code>
+      to start a thread
+     </h2>
+     <div data-outline="using_an_anonymous_runnable_to_start_a_thread">
+      <p>
+       The
+       <code>
+        Runnables
+       </code>
+       we use to create new threads often meet these criteria perfectly.
+      </p>
+      <p>
+       Here’s
+       <a href="../index.html#java-tutorials-threads">
+        the example from the reading
+       </a>
+       :
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>{
+    <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() {
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+            System.out.println(<span class="hljs-string">"Hello from a thread!"</span>);
+        }
+    }).start();
+}</code></pre>
+      <p>
+       Rather than (1) declare a class that implements
+       <code>
+        Runnable
+       </code>
+       where the
+       <code>
+        run
+       </code>
+       method calls
+       <code>
+        System.out.println
+       </code>
+       , (2) create an instance of that class, and (3) pass that instance to the
+       <code>
+        Thread
+       </code>
+       constructor, we do all three steps in one go with an anonymous
+       <code>
+        Runnable
+       </code>
+       .
+      </p>
+      <hr>
+       <p>
+        If you’re feeling clever, you can go one step further with Java’s
+        <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">
+         lambda expressions
+        </a>
+        :
+       </p>
+       <pre><code class="language-java hljs"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>{
+    <span class="hljs-keyword">new</span> Thread(() -&gt; System.out.println(<span class="hljs-string">"Hello from a thread!"</span>)).start();
+}</code></pre>
+       <p>
+        Whether that’s more or less
+        <em>
+         easy to understand
+        </em>
+        is up for debate.
+        <code>
+         Runnable
+        </code>
+        and
+        <code>
+         run
+        </code>
+        never appear at all, so you certainly have to do more research to understand this construction the first time you come across it.
+       </p>
+      </hr>
+     </div>
+     <h2 id="back_to_concurrency">
+      <a href="../index.html#anonymous-runnable">
+       Back to
+       <em>
+        Concurrency
+       </em>
+      </a>
+     </h2>
+    </div>
+   </div>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../../../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/19-concurrency/anonymous-runnable/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:37:19 GMT -->
+</html>
+<!-- Handout delivered Thu Mar 17 2016 22:46:52 GMT-0400 (EDT) -->

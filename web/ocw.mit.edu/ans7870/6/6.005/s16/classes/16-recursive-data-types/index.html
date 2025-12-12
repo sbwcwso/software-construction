@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/16-recursive-data-types/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:35:59 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    Reading 16: Recursive Data Types
+   </title>
+   <link href="../../web/handout-style.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="../../index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#reading_16_recursive_data_types">
+      Reading 16: Recursive Data Types
+     </a>
+    </li>
+    <li>
+     <a href="#introduction">
+      Introduction
+     </a>
+    </li>
+    <li>
+     <a href="#part_1_recursive_data_types">
+      Part 1: Recursive Data Types
+     </a>
+    </li>
+    <li>
+     <a href="#part_2_writing_a_program_with_adts">
+      Part 2: Writing a Program with ADTs
+     </a>
+    </li>
+    <li>
+     <a href="#summary">
+      Summary
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="reading_16_recursive_data_types">
+    Reading 16: Recursive Data Types
+   </h1>
+   <div data-outline="reading_16_recursive_data_types">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <h4>
+      Software in 6.005
+     </h4>
+     <table class="table table-striped no-markdown">
+      <tbody>
+       <tr>
+        <th width="33%">
+         Safe from bugs
+        </th>
+        <th>
+         Easy to understand
+        </th>
+        <th>
+         Ready for change
+        </th>
+       </tr>
+       <tr>
+        <td>
+         Correct today and correct in the unknown future.
+        </td>
+        <td>
+         Communicating clearly with future programmers, including future you.
+        </td>
+        <td>
+         Designed to accommodate change without rewriting.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <h4>
+      Objectives
+     </h4>
+     <ul>
+      <li>
+       Understand recursive datatypes
+      </li>
+      <li>
+       Read and write datatype definitions
+      </li>
+      <li>
+       Understand and implement functions over recursive datatypes
+      </li>
+      <li>
+       Understand immutable lists and know the standard operations on immutable lists
+      </li>
+      <li>
+       Know and follow a recipe for writing programs with ADTs
+      </li>
+     </ul>
+     <h2 id="introduction">
+      Introduction
+     </h2>
+     <div data-outline="introduction">
+      <p>
+       In this reading we’ll look at recursively-defined types, how to specify operations on such types, and how to implement them.
+Our main example will be
+       <em>
+        immutable lists
+       </em>
+       .
+      </p>
+      <p>
+       Then we’ll use another recursive datatype example,
+       <em>
+        matrix multiplications
+       </em>
+       , to walk through our process for programming with ADTs.
+      </p>
+     </div>
+     <h2 id="part_1_recursive_data_types">
+      <a href="recursive/index.html">
+       Part 1: Recursive Data Types
+      </a>
+     </h2>
+     <h2 id="part_2_writing_a_program_with_adts">
+      <a href="matexpr/index.html">
+       Part 2: Writing a Program with ADTs
+      </a>
+     </h2>
+     <h2 id="summary">
+      Summary
+     </h2>
+     <div data-outline="summary">
+      <p>
+       Let’s review how recursive datatypes fit in with the main goals of this course:
+      </p>
+      <ul>
+       <li>
+        <p>
+         <strong>
+          Safe from bugs
+         </strong>
+         .
+Recursive datatypes allow us to tackle problems with a recursive or unbounded structure.
+Implementing appropriate data structures that encapsulate important operations and maintain their own invariants is crucial for correctness.
+        </p>
+       </li>
+       <li>
+        <p>
+         <strong>
+          Easy to understand
+         </strong>
+         .
+Functions over recursive datatypes, specified in the abstract type and implemented in each concrete variant, organize the different behavior of the type.
+        </p>
+       </li>
+       <li>
+        <p>
+         <strong>
+          Ready for change
+         </strong>
+         .
+A recursive ADT, like any ADT, separates abstract values from concrete representations, making it possible to change low-level code and high-level structure of the implementation without changing clients.
+        </p>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/16-recursive-data-types/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:35:59 GMT -->
+</html>
+<!-- Handout delivered Sun Mar 06 2016 19:59:45 GMT-0500 (EST) -->

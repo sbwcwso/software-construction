@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/26-little-languages/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:30 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    Reading 26: Little Languages
+   </title>
+   <link href="../../web/handout-style.css" rel="stylesheet">
+    <script>
+     /* script for Little Languages reading */
+function onHandoutDidRender() {
+  var MUSIC = "https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/";
+  var TARGET = "github-ex26";
+  
+  /* links like [Foo.java:20-30]() */
+  $('a[href=""]:contains("\\.java")').each(function(idx, elt) {
+    elt.href = MUSIC + elt.innerText.replace(':', '#L');
+    elt.target = TARGET;
+  });
+  
+  /* links like [...](music:Foo.java) */
+  $('a[href^="music:"]').each(function(idx, elt) {
+    elt.href = MUSIC + elt.href.replace('music:', '').replace(':', '#L');
+    elt.target = TARGET;
+  });
+}
+    </script>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="../../index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#reading_26_little_languages">
+      Reading 26: Little Languages
+     </a>
+    </li>
+    <li>
+     <a href="#representing_code_as_data">
+      Representing code as data
+     </a>
+    </li>
+    <li>
+     <a href="#building_languages_to_solve_problems">
+      Building languages to solve problems
+     </a>
+    </li>
+    <li>
+     <a href="#music_language">
+      Music language
+     </a>
+    </li>
+    <li>
+     <a href="#to_be_continued">
+      To be continued
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="reading_26_little_languages">
+    Reading 26: Little Languages
+   </h1>
+   <div data-outline="reading_26_little_languages">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <h4>
+      Software in 6.005
+     </h4>
+     <table class="table table-striped no-markdown">
+      <tbody>
+       <tr>
+        <th width="33%">
+         Safe from bugs
+        </th>
+        <th>
+         Easy to understand
+        </th>
+        <th>
+         Ready for change
+        </th>
+       </tr>
+       <tr>
+        <td>
+         Correct today and correct in the unknown future.
+        </td>
+        <td>
+         Communicating clearly with future programmers, including future you.
+        </td>
+        <td>
+         Designed to accommodate change without rewriting.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <h4>
+      Objectives
+     </h4>
+     <p>
+      In this reading we will begin to explore the design of a
+      <strong>
+       little language
+      </strong>
+      for constructing and manipulating music.
+Here’s the bottom line: when you need to solve a problem, instead of writing a
+      <em>
+       program
+      </em>
+      to solve just that one problem, build a
+      <em>
+       language
+      </em>
+      that can solve a range of related problems.
+     </p>
+     <p>
+      The goal for this reading is to introduce the idea of
+      <strong>
+       representing code as data
+      </strong>
+      and familiarize you with an initial version of the
+      <strong>
+       music language
+      </strong>
+      .
+     </p>
+     <h2 id="representing_code_as_data">
+      Representing code as data
+     </h2>
+     <div data-outline="representing_code_as_data">
+      <p>
+       Recall the
+       <a href="../16-recursive-data-types/recursive/index.html#another_example_boolean_formulas">
+        <code>
+         Formula
+        </code>
+        datatype from
+        <em>
+         Recursive Data Types
+        </em>
+       </a>
+       :
+      </p>
+      <pre><code class="language-text">Formula = Variable(name:String)
+          + Not(formula:Formula)
+          + And(left:Formula, right:Formula)
+          + Or(left:Formula, right:Formula)</code></pre>
+      <p>
+       We used instances of
+       <code>
+        Formula
+       </code>
+       to take propositional logic formulas, e.g.
+       <strong>
+        <em>
+         (p ∨ q) ∧ (¬p ∨ r)
+        </em>
+       </strong>
+       , and represent them in a data structure, e.g.:
+      </p>
+      <pre><code class="language-text">And(Or(Variable("p"), Variable("q")),
+    Or(Not(Variable("p")), Variable("r")))</code></pre>
+      <p>
+       In the parlance of grammars and parsers, formulas are a
+       <em>
+        language
+       </em>
+       , and
+       <code>
+        Formula
+       </code>
+       is an
+       <a href="../18-parser-generators/index.html">
+        <em>
+         abstract syntax tree
+        </em>
+       </a>
+       .
+      </p>
+      <p>
+       But why did we define a
+       <code>
+        Formula
+       </code>
+       type?
+Java already has a way to represent expressions of Boolean variables with
+       <em>
+        logical and
+       </em>
+       ,
+       <em>
+        or
+       </em>
+       , and
+       <em>
+        not
+       </em>
+       .
+For example, given
+       <code>
+        boolean
+       </code>
+       variables
+       <code>
+        p
+       </code>
+       ,
+       <code>
+        q
+       </code>
+       , and
+       <code>
+        r
+       </code>
+       :
+      </p>
+      <pre><code class="hljs">(p || q) &amp;&amp; ((!p) || r)
+</code></pre>
+      <p>
+       Done!
+      </p>
+      <p>
+       The answer is that the Java code expression
+       <code>
+        (p || q) &amp;&amp; ((!p) || r)
+       </code>
+       is evaluated as soon as we encounter it in our running program.
+The
+       <code>
+        Formula
+       </code>
+       value
+       <code>
+        And(Or(...), Or(...))
+       </code>
+       is a
+       <strong>
+        first-class value
+       </strong>
+       that can be stored, passed and returned from one method to another, manipulated, and evaluated now or later (or more than once) as needed.
+      </p>
+      <p>
+       The
+       <code>
+        Formula
+       </code>
+       type is an example of
+       <strong>
+        representing code as data
+       </strong>
+       , and we’ve seen many more.
+      </p>
+      <p>
+       Consider this
+       <a href="../25-map-filter-reduce/index.html#first-class_functions_in_java">
+        functional object
+       </a>
+       :
+      </p>
+      <pre><code class="language-java hljs"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VariableNameComparator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Comparator</span>&lt;<span class="hljs-title">Variable</span>&gt; </span>{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(Variable v1, Variable v2)</span> </span>{
+        <span class="hljs-keyword">return</span> v1.name().compareTo(v2.name());
+    }
+}</code></pre>
+      <p>
+       An instance of
+       <code>
+        VariableNameComparator
+       </code>
+       is a value that can be passed around, returned, and stored.
+But at any time, the function that it represents can be invoked by calling its
+       <code>
+        compare
+       </code>
+       method with a couple of
+       <code>
+        Variable
+       </code>
+       arguments:
+      </p>
+      <pre><code class="language-java hljs">Variable v1, v2;
+Comparator&lt;Variable&gt; c = <span class="hljs-keyword">new</span> VariableNameComparator();
+...
+<span class="hljs-keyword">int</span> a = c.compare(v1, v2);
+<span class="hljs-keyword">int</span> b = c.compare(v2, v1);
+SortedSet&lt;Variable&gt; vars = <span class="hljs-keyword">new</span> TreeSet&lt;&gt;(c); <span class="hljs-comment">// vars is sorted by name</span></code></pre>
+      <p>
+       Lambda expressions allow us to create functional objects with a compact syntax:
+      </p>
+      <pre><code class="language-java hljs">Comparator&lt;Variable&gt; c = (v1, v2) -&gt; v1.name().compareTo(v2.name());</code></pre>
+     </div>
+     <h2 id="building_languages_to_solve_problems">
+      Building languages to solve problems
+     </h2>
+     <div data-outline="building_languages_to_solve_problems">
+      <p>
+       When we define an
+       <a href="../12-abstract-data-types/index.html">
+        abstract data type
+       </a>
+       , we’re extending the universe of built-in types provided by Java to include a new type, with new operations, appropriate to our problem domain.
+This new type is like a new language: a new set of nouns (values) and verbs (operations) we can manipulate.
+Of course, those nouns and verbs are abstractions built on top the existing nouns and verbs which were themselves already abstractions.
+      </p>
+      <p>
+       A
+       <em>
+        language
+       </em>
+       has greater flexibility than a mere
+       <em>
+        program
+       </em>
+       , because we can use a language to solve a large class of related problems, instead of just a single problem.
+      </p>
+      <ul>
+       <li>
+        <p>
+         That’s the difference between writing
+         <code>
+          (p || q) &amp;&amp; ((!p) || r)
+         </code>
+         and devising a
+         <code>
+          Formula
+         </code>
+         type to represent the semantically-equivalent Boolean formula.
+        </p>
+       </li>
+       <li>
+        <p>
+         And it’s the difference between writing a matrix multiplication function and devising a
+         <a href="../16-recursive-data-types/matexpr/index.html">
+          <code>
+           MatrixExpression
+          </code>
+          type
+         </a>
+         to represent matrix multiplications — and store them, manipulate them, optimize them, evaluate them, and so on.
+        </p>
+       </li>
+      </ul>
+      <p>
+       First-class functions and functional objects enable us to create particularly powerful languages because we can capture patterns of computation as reusable abstractions.
+      </p>
+     </div>
+     <h2 id="music_language">
+      Music language
+     </h2>
+     <div data-outline="music_language">
+      <p>
+       In class, we will design and implement a language for generating and playing music.
+To prepare, let’s first understand the Java APIs for playing music with the
+       <a href="http://en.wikipedia.org/wiki/MIDI">
+        MIDI
+       </a>
+       synthesizer.
+We’ll see how to write a
+       <em>
+        program
+       </em>
+       to play MIDI music.
+Then we’ll begin to develop our music
+       <em>
+        language
+       </em>
+       by writing a recursive abstract data type for simple musical tunes.
+We’ll choose a notation for writing music in strings, and we’ll implement a parser to create instances of our
+       <code>
+        Music
+       </code>
+       type.
+      </p>
+      <div class="handout-solo alert alert-warning">
+       <p>
+        The
+        <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting">
+         <strong>
+          full source code for the basic music language
+         </strong>
+        </a>
+        is on GitHub.
+       </p>
+       <p>
+        <strong>
+         Clone
+        </strong>
+        the
+        <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting">
+         sp16-ex26-music-starting
+        </a>
+        repo so you can run the code and follow the discussion below.
+       </p>
+      </div>
+      <h3 id="playing_midi_music">
+       Playing MIDI music
+      </h3>
+      <div data-outline="playing_midi_music">
+       <p>
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/midi/MidiSequencePlayer.java" target="github-ex26">
+         <strong>
+          <code>
+           music.midi.MidiSequencePlayer
+          </code>
+         </strong>
+        </a>
+        uses the Java MIDI APIs to play sequences of notes.
+It’s quite a bit of code, and you don’t need to understand how it works.
+       </p>
+       <p>
+        <code>
+         MidiSequencePlayer
+        </code>
+        implements the
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/SequencePlayer.java" target="github-ex26">
+         <strong>
+          <code>
+           music.SequencePlayer
+          </code>
+         </strong>
+        </a>
+        interface, allowing clients to use it without depending on the particular MIDI implementation.
+We
+        <em>
+         do
+        </em>
+        need to understand this interface and the types it depends on:
+       </p>
+       <p>
+        <strong>
+         <code>
+          addNote : SequencePlayer × Instrument × Pitch × double × double → void
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/SequencePlayer.java#L15" target="github-ex26">
+         SequencePlayer.java:15
+        </a>
+        ) is the workhorse of our music player.
+Calling this method schedules a musical pitch to be played at some time during the piece of music.
+       </p>
+       <p>
+        <strong>
+         <code>
+          play : SequencePlayer → void
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/SequencePlayer.java#L20" target="github-ex26">
+         SequencePlayer.java:20
+        </a>
+        ) actually plays the music.
+Until we call this method, we’re just scheduling music that will, eventually, be played.
+       </p>
+       <p>
+        The
+        <code>
+         addNote
+        </code>
+        operation depends on two more types:
+       </p>
+       <p>
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Instrument.java" target="github-ex26">
+         <strong>
+          <code>
+           Instrument
+          </code>
+         </strong>
+        </a>
+        is an enumeration of all the available MIDI instruments.
+       </p>
+       <p>
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Pitch.java" target="github-ex26">
+         <strong>
+          <code>
+           Pitch
+          </code>
+         </strong>
+        </a>
+        is an abstract data type for musical pitches (think keys on the piano keyboard).
+       </p>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         <strong>
+          Read
+         </strong>
+         and understand the
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Pitch.java" target="github-ex26">
+          <strong>
+           <code>
+            Pitch
+           </code>
+          </strong>
+         </a>
+         documentation and the specifications for its
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Pitch.java#L57-68" target="github-ex26">
+          public constructor
+         </a>
+         and all its
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Pitch.java#L70-122" target="github-ex26">
+          public methods
+         </a>
+         .
+        </p>
+        <p>
+         Our music data type will rely on
+         <code>
+          Pitch
+         </code>
+         in its rep, so be sure to understand the
+         <code>
+          Pitch
+         </code>
+         spec as well as its rep and abstraction function.
+        </p>
+       </div>
+       <p>
+        Using the MIDI sequence player and
+        <code>
+         Pitch
+        </code>
+        , we’re ready to write code for our first bit of music!
+       </p>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         <strong>
+          Read
+         </strong>
+         and understand the
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/examples/ScaleSequence.java" target="github-ex26">
+          <strong>
+           <code>
+            music.examples.ScaleSequence
+           </code>
+          </strong>
+         </a>
+         code.
+        </p>
+        <p>
+         <strong>
+          Run the main method in
+          <code>
+           ScaleSequence
+          </code>
+          .
+         </strong>
+         You should hear a one-octave scale!
+        </p>
+       </div>
+      </div>
+      <h3 id="music_data_type">
+       Music data type
+      </h3>
+      <div data-outline="music_data_type">
+       <p>
+        The
+        <code>
+         Pitch
+        </code>
+        datatype is useful, but if we want to represent a whole piece of music using
+        <code>
+         Pitch
+        </code>
+        objects, we should create an abstract data type to encapsulate that representation.
+       </p>
+       <p>
+        To start, we’ll define the
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Music.java" target="github-ex26">
+         <strong>
+          <code>
+           Music
+          </code>
+         </strong>
+        </a>
+        type with a few operations:
+       </p>
+       <p>
+        <strong>
+         <code>
+          notes : String × Instrument → Music
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java#L51" target="github-ex26">
+         MusicLanguage.java:51
+        </a>
+        ) makes a new Music from a string of simplified abc notation, described below.
+       </p>
+       <p>
+        <strong>
+         <code>
+          duration : Music → double
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Music.java#L11" target="github-ex26">
+         Music.java:11
+        </a>
+        ) returns the duration, in beats, of the piece of music.
+       </p>
+       <p>
+        <strong>
+         <code>
+          play : Music × SequencePlayer × double → void
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Music.java#L18" target="github-ex26">
+         Music.java:18
+        </a>
+        ) plays the piece of music using the given sequence player.
+       </p>
+       <p>
+        We’ll implement
+        <code>
+         duration
+        </code>
+        and
+        <code>
+         play
+        </code>
+        as instance methods of
+        <code>
+         Music
+        </code>
+        , so we declare them in the
+        <code>
+         Music
+        </code>
+        interface.
+       </p>
+       <p>
+        <code>
+         notes
+        </code>
+        will be a static factory method; rather than put it in
+        <code>
+         Music
+        </code>
+        (which we could do), we’ll put it in a separate class:
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java" target="github-ex26">
+         <strong>
+          <code>
+           MusicLanguage
+          </code>
+         </strong>
+        </a>
+        will be our place for all the static methods we write to operate on
+        <code>
+         Music
+        </code>
+        .
+       </p>
+       <p>
+        Now that we’ve chosen some operations in the spec of
+        <code>
+         Music
+        </code>
+        , let’s choose a representation.
+       </p>
+       <ul>
+        <li>
+         <p>
+          Looking at
+          <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/examples/ScaleSequence.java" target="github-ex26">
+           <code>
+            ScaleSequence
+           </code>
+          </a>
+          , the first concrete variant that might jump out at us is one to capture the information in each call to
+          <code>
+           addNote
+          </code>
+          : a particular pitch on a particular instrument played for some amount of time.
+We’ll call this a
+          <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Note.java" target="github-ex26">
+           <strong>
+            <code>
+             Note
+            </code>
+           </strong>
+          </a>
+          .
+         </p>
+        </li>
+        <li>
+         <p>
+          The other basic element of music is the silence between notes:
+          <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Rest.java" target="github-ex26">
+           <strong>
+            <code>
+             Rest
+            </code>
+           </strong>
+          </a>
+          .
+         </p>
+        </li>
+        <li>
+         <p>
+          Finally, we need a way to glue these basic elements together into larger pieces of music.
+We’ll choose a tree-like structure:
+          <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Concat.java" target="github-ex26">
+           <strong>
+            <code>
+             Concat(m1,m2:Music)
+            </code>
+           </strong>
+          </a>
+          represents
+          <code>
+           m1
+          </code>
+          followed by
+          <code>
+           m2
+          </code>
+          , where
+          <code>
+           m1
+          </code>
+          and
+          <code>
+           m2
+          </code>
+          are any music.
+         </p>
+         <p>
+          This tree structure turns out to be an elegant decision as we further develop our
+          <code>
+           Music
+          </code>
+          type later on.
+In a real design process, we might iterate on the recursive structure of
+          <code>
+           Music
+          </code>
+          before we find the best implementation.
+         </p>
+        </li>
+       </ul>
+       <p>
+        Here’s the datatype definition:
+       </p>
+       <pre><code class="language-text">Music = Note(duration:double, pitch:Pitch, instrument:Instrument)
+        + Rest(duration:double)
+        + Concat(m1:Music, m2:Music)</code></pre>
+       <h4>
+        Composite
+       </h4>
+       <p>
+        <code>
+         Music
+        </code>
+        is an example of the
+        <strong>
+         composite pattern
+        </strong>
+        , in which we treat both single objects (
+        <em>
+         primitives
+        </em>
+        , e.g.
+        <code>
+         Note
+        </code>
+        and
+        <code>
+         Rest
+        </code>
+        ) and groups of objects (
+        <em>
+         composites
+        </em>
+        , e.g.
+        <code>
+         Concat
+        </code>
+        ) the same way.
+       </p>
+       <ul>
+        <li>
+         <p>
+          <code>
+           Formula
+          </code>
+          is also an example of the composite pattern.
+         </p>
+        </li>
+        <li>
+         <p>
+          The GUI view tree relies heavily on the composite pattern: there are
+          <em>
+           primitive views
+          </em>
+          like
+          <code>
+           JLabel
+          </code>
+          and
+          <code>
+           JTextField
+          </code>
+          that don’t have children, and
+          <em>
+           composite views
+          </em>
+          like
+          <code>
+           JPanel
+          </code>
+          and
+          <code>
+           JScollPage
+          </code>
+          that do contain other views as children.
+Both implement the common
+          <code>
+           JComponent
+          </code>
+          interface.
+         </p>
+        </li>
+       </ul>
+       <p>
+        The composite pattern gives rise to a tree data structure, with primitives at the leaves and composites at the internal nodes.
+       </p>
+       <h4>
+        Emptiness
+       </h4>
+       <p>
+        One last design consideration: how do we represent the empty music?
+It’s always good to have a representation for
+        <em>
+         nothing
+        </em>
+        , and we’re certainly not going to use
+        <code>
+         null
+        </code>
+        .
+       </p>
+       <p>
+        We could introduce an
+        <code>
+         Empty
+        </code>
+        variant, but instead we’ll use a
+        <code>
+         Rest
+        </code>
+        of duration
+        <code>
+         0
+        </code>
+        to represent emptiness.
+       </p>
+      </div>
+      <h3 id="implementing_basic_operations">
+       Implementing basic operations
+      </h3>
+      <div data-outline="implementing_basic_operations">
+       <p>
+        First we need to create the
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Note.java" target="github-ex26">
+         <strong>
+          <code>
+           Note
+          </code>
+         </strong>
+        </a>
+        ,
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Rest.java" target="github-ex26">
+         <strong>
+          <code>
+           Rest
+          </code>
+         </strong>
+        </a>
+        , and
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Concat.java" target="github-ex26">
+         <strong>
+          <code>
+           Concat
+          </code>
+         </strong>
+        </a>
+        variants.
+All three are straightforward to implement, starting with constructors,
+        <code>
+         checkRep
+        </code>
+        , some observers,
+        <code>
+         toString
+        </code>
+        , and the equality methods.
+       </p>
+       <ul>
+        <li>
+         <p>
+          Since the
+          <code>
+           duration
+          </code>
+          operation is an instance method, each variant implements
+          <code>
+           duration
+          </code>
+          appropriately.
+         </p>
+        </li>
+        <li>
+         <p>
+          The
+          <code>
+           play
+          </code>
+          operation is also an instance method; we’ll discuss it below under
+          <a href="#implementing_the_player">
+           <em>
+            implementing the player
+           </em>
+          </a>
+          .
+         </p>
+        </li>
+       </ul>
+       <p>
+        And we’ll discuss the
+        <code>
+         notes
+        </code>
+        operation in
+        <a href="#implementing_the_parser">
+         <em>
+          implementing the parser
+         </em>
+        </a>
+        .
+       </p>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         <strong>
+          Read
+         </strong>
+         and understand the
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Note.java" target="github-ex26">
+          <code>
+           Note
+          </code>
+         </a>
+         ,
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Rest.java" target="github-ex26">
+          <code>
+           Rest
+          </code>
+         </a>
+         , and
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Concat.java" target="github-ex26">
+          <code>
+           Concat
+          </code>
+         </a>
+         classes.
+        </p>
+       </div>
+       <p>
+        To avoid representation exposure, let’s add some additional static factory methods to the
+        <code>
+         Music
+        </code>
+        interface:
+       </p>
+       <p>
+        <strong>
+         <code>
+          note : double × Pitch × Instrument → Music
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java#L92" target="github-ex26">
+         MusicLanguage.java:92
+        </a>
+        )
+       </p>
+       <p>
+        <strong>
+         <code>
+          rest : double → Music
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java#L100" target="github-ex26">
+         MusicLanguage.java:100
+        </a>
+        )
+       </p>
+       <p>
+        <strong>
+         <code>
+          concat : Music × Music → Music
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java#L113" target="github-ex26">
+         MusicLanguage.java:113
+        </a>
+        ) is our first producer operation.
+       </p>
+       <p>
+        All three of them are easy to implement by constructing the appropriate variant.
+       </p>
+      </div>
+      <h3 id="music_notation">
+       Music notation
+      </h3>
+      <div data-outline="music_notation">
+       <p>
+        We will write pieces of music using a simplified version of
+        <a href="http://en.wikipedia.org/wiki/ABC_notation">
+         <strong>
+          abc notation
+         </strong>
+        </a>
+        , a text-based music format.
+       </p>
+       <p>
+        We’ve already been representing pitches using their familiar letters.
+Our simplified abc notation represents sequences of
+        <strong>
+         notes
+        </strong>
+        and
+        <strong>
+         rests
+        </strong>
+        with syntax for indicating their
+        <strong>
+         duration
+        </strong>
+        ,
+        <strong>
+         accidental
+        </strong>
+        (sharp or flat), and
+        <strong>
+         octave
+        </strong>
+        .
+       </p>
+       <p>
+        For example:
+       </p>
+       <p>
+        <strong>
+         <code>
+          C D E F G A B C' B A G F E D C
+         </code>
+        </strong>
+        represents the one-octave ascending and descending C major scale we played in
+        <code>
+         ScaleSequence
+        </code>
+        .
+        <code>
+         C
+        </code>
+        is middle C, and
+        <code>
+         C'
+        </code>
+        is C one octave above middle C.
+Each note is a quarter note.
+       </p>
+       <p>
+        <strong>
+         <code>
+          C/2 D/2 _E/2 F/2 G/2 _A/2 _B/2 C'
+         </code>
+        </strong>
+        is the ascending scale in C minor, played twice as fast.
+The E, A, and B are flat.
+Each note is an eighth note.
+       </p>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         <strong>
+          Read
+         </strong>
+         and understand the specification of
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java#L20-50" target="github-ex26">
+          <code>
+           notes
+          </code>
+          in
+          <code>
+           MusicLanguage
+          </code>
+         </a>
+         .
+        </p>
+        <p>
+         You don’t need to understand the parser implementation yet, but you should understand the simplified abc notation enough to make sense of the examples.
+        </p>
+       </div>
+       <p>
+        If you’re not familiar with music theory — why is an octave 8 notes but only 12 semitones? — don’t worry.
+You might not be able to look at the abc strings and guess what they sound like, but you can understand the point of choosing a convenient textual syntax.
+       </p>
+      </div>
+      <h3 id="implementing_the_parser">
+       Implementing the parser
+      </h3>
+      <div data-outline="implementing_the_parser">
+       <p>
+        The
+        <code>
+         notes
+        </code>
+        method parses strings of simplified abc notation into
+        <code>
+         Music
+        </code>
+        .
+       </p>
+       <p>
+        <strong>
+         <code>
+          notes : String × Instrument → Music
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java#L51" target="github-ex26">
+         MusicLanguage.java:51
+        </a>
+        ) splits the input into individual symbols (e.g.
+        <code>
+         A,,/2
+        </code>
+        ,
+        <code>
+         .1/2
+        </code>
+        ).
+We start with the empty
+        <code>
+         Music
+        </code>
+        ,
+        <code>
+         rest(0)
+        </code>
+        , symbols are parsed individually, and we build up the
+        <code>
+         Music
+        </code>
+        using
+        <code>
+         concat
+        </code>
+        .
+       </p>
+       <p>
+        <strong>
+         <code>
+          parseSymbol : String × Instrument → Music
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java#L62" target="github-ex26">
+         MusicLanguage.java:62
+        </a>
+        ) returns a
+        <code>
+         Rest
+        </code>
+        or a
+        <code>
+         Note
+        </code>
+        for a single abc symbol (
+        <code>
+         symbol
+        </code>
+        in the grammar).
+It only parses the type (rest or note) and duration; it relies on
+        <code>
+         parsePitch
+        </code>
+        to handle pitch letters, accidentals, and octaves.
+       </p>
+       <p>
+        <strong>
+         <code>
+          parsePitch : String → Pitch
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/MusicLanguage.java#L77" target="github-ex26">
+         MusicLanguage.java:77
+        </a>
+        ) returns a
+        <code>
+         Pitch
+        </code>
+        by parsing a
+        <code>
+         pitch
+        </code>
+        grammar production.
+You should be able to understand the recursion — what’s the base case? What are the recursive cases?
+       </p>
+      </div>
+      <h3 id="implementing_the_player">
+       Implementing the player
+      </h3>
+      <div data-outline="implementing_the_player">
+       <p>
+        Recall our operation for playing music:
+       </p>
+       <p>
+        <strong>
+         <code>
+          play : Music × SequencePlayer × double → void
+         </code>
+        </strong>
+        (
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Music.java#L18" target="github-ex26">
+         Music.java:18
+        </a>
+        ) plays the piece of music using the given sequence player after the given number of beats delay.
+       </p>
+       <p>
+        Why does this operation take
+        <code>
+         atBeat
+        </code>
+        ?
+Why not simply play the music
+        <em>
+         now
+        </em>
+        ?
+       </p>
+       <p>
+        If we define
+        <code>
+         play
+        </code>
+        in that way, we won’t be able to play sequences of notes over time unless we actually
+        <em>
+         pause
+        </em>
+        during the
+        <code>
+         play
+        </code>
+        operation, for example with
+        <code>
+         Thread.sleep
+        </code>
+        .
+Our sequence player’s
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/SequencePlayer.java#L15" target="github-ex26">
+         <code>
+          addNote
+         </code>
+         operation
+        </a>
+        is already designed to schedule notes in the future — it handles the delay.
+       </p>
+       <p>
+        With that design decision, it’s straightforward to implement
+        <code>
+         play
+        </code>
+        in every variant of
+        <code>
+         Music
+        </code>
+        .
+       </p>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         <strong>
+          Read
+         </strong>
+         and understand the
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Note.java#L55" target="github-ex26">
+          <code>
+           Note.play
+          </code>
+         </a>
+         ,
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Rest.java#L33" target="github-ex26">
+          <code>
+           Rest.play
+          </code>
+         </a>
+         , and
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/Concat.java#L51" target="github-ex26">
+          <code>
+           Concat.play
+          </code>
+         </a>
+         methods.
+        </p>
+        <p>
+         You should be able to follow their recursive implementations.
+        </p>
+       </div>
+       <p>
+        Just one more piece of utility code before we’re ready to jam:
+        <a href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/midi/MusicPlayer.java" target="github-ex26">
+         <strong>
+          <code>
+           music.midi.MusicPlayer
+          </code>
+         </strong>
+        </a>
+        plays a
+        <code>
+         Music
+        </code>
+        using the
+        <code>
+         MidiSequencePlayer
+        </code>
+        .
+        <code>
+         Music
+        </code>
+        doesn’t know about the concrete type of the sequence player, so we need a bit of code to bring them together.
+       </p>
+       <p>
+        Bringing this
+        <em>
+         all
+        </em>
+        together, let’s use the
+        <code>
+         Music
+        </code>
+        ADT:
+       </p>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         <strong>
+          Read
+         </strong>
+         and understand the
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/examples/ScaleMusic.java" target="github-ex26">
+          <strong>
+           <code>
+            music.examples.ScaleMusic
+           </code>
+          </strong>
+         </a>
+         code.
+        </p>
+        <p>
+         <strong>
+          Run the main method in
+          <code>
+           ScaleMusic
+          </code>
+          .
+         </strong>
+         You should hear the same one-octave scale again.
+        </p>
+       </div>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         That’s not very exciting, so
+         <strong>
+          read
+         </strong>
+         <a class="alert-link" href="https://github.com/mit6005/sp16-ex26-music-starting/blob/master/src/music/examples/RowYourBoatInitial.java" target="github-ex26">
+          <strong>
+           <code>
+            music.examples.RowYourBoatInitial
+           </code>
+          </strong>
+         </a>
+         and
+         <strong>
+          run the main method.
+         </strong>
+         You should hear
+         <em>
+          Row, row, row your boat
+         </em>
+         !
+        </p>
+        <p>
+         Can you follow the flow of the code from calling
+         <code>
+          notes(..)
+         </code>
+         to having an instance of
+         <code>
+          Music
+         </code>
+         to the recursive
+         <code>
+          play(..)
+         </code>
+         call to individual
+         <code>
+          addNote(..)
+         </code>
+         calls?
+        </p>
+       </div>
+      </div>
+     </div>
+     <h2 id="to_be_continued">
+      To be continued
+     </h2>
+     <div data-outline="to_be_continued">
+      <p>
+       Playing
+       <em>
+        Row, row, row your boat
+       </em>
+       is pretty exciting, but so far the most powerful thing we’ve done is not so much the
+       <em>
+        music language
+       </em>
+       as it is the very basic
+       <em>
+        music parser
+       </em>
+       .
+Writing music using the simplified abc notation is clearly much more
+       <strong>
+        easy to understand
+       </strong>
+       ,
+       <strong>
+        safe from bugs
+       </strong>
+       , and
+       <strong>
+        ready for change
+       </strong>
+       than writing page after page of
+       <code>
+        addNote
+       </code>
+       <code>
+        addNote
+       </code>
+       <code>
+        addNote
+       </code>
+       …
+      </p>
+      <p>
+       In class, we’ll expand our music language and turn it into a powerful tool for constructing and manipulating complex musical structures.
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/26-little-languages/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:30 GMT -->
+</html>
+<!-- Handout delivered Sun Apr 10 2016 22:46:11 GMT-0400 (EDT) -->

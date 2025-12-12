@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8">
+   <title>
+    Code Reviewing
+   </title>
+   <link href="../web/handout-style.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="https://ocw.mit.edu/ans7870/6/6.005/s16/">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#code_reviewing">
+      Code Reviewing
+     </a>
+    </li>
+    <li>
+     <a href="#what_to_look_for">
+      What to Look For
+     </a>
+    </li>
+    <li>
+     <a href="#process">
+      Process
+     </a>
+    </li>
+    <li>
+     <a href="#privacy_visibility">
+      Privacy &amp; Visibility
+     </a>
+    </li>
+    <li>
+     <a href="#reputation">
+      Reputation
+     </a>
+    </li>
+    <li>
+     <a href="#respect">
+      Respect
+     </a>
+    </li>
+    <li>
+     <a href="#faq_for_reviewers">
+      FAQ for Reviewers
+     </a>
+    </li>
+    <li>
+     <a href="#faq_for_code_authors">
+      FAQ for Code Authors
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="code_reviewing">
+    Code Reviewing
+   </h1>
+   <div data-outline="code_reviewing">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <p>
+      In this course, you will read your classmates’ code and give them comments about it.
+This document describes the whys and hows of the 6.005 code reviewing process.
+     </p>
+     <p>
+      You can’t learn how to write without learning how to read – and programming is no exception.
+Code reviewing is widely used in software development, both in industry and in open source projects.
+Some companies like Google have instituted review-before-commit as a required policy.
+You can’t get a line of code into the Google source code repository unless another Google engineer has read it, given feedback about it, and signed off on it.
+     </p>
+     <p>
+      The benefits of code review in practice are several.
+Reviewing helps find bugs, in a way that’s complementary to other techniques (like static checking, testing, assertions, and reasoning).
+Reviewing uncovers code that is confusing, poorly documented, unsafe, or otherwise not ready for maintenance or future change.
+Reviewing also spreads knowledge through an organization, allowing developers to learn from each other by explicit feedback and by example.
+So code reviewing is not only a practically important skill that you will need in the real world, but also a learning opportunity.
+     </p>
+     <h2 id="what_to_look_for">
+      What to Look For
+     </h2>
+     <div data-outline="what_to_look_for">
+      <p>
+       Although you can make comments about anything you think is relevant, the primary goal of this 
+class is to learn how to write code that is safe from bugs, easy to understand, and ready for 
+change.
+Read the code with those principles in mind. Here are some concrete examples of 
+problems to look for:
+      </p>
+      <p>
+       <strong>
+        Bugs or potential bugs.
+       </strong>
+      </p>
+      <ul>
+       <li>
+        Repetitive code (remember DRY, Don’t Repeat Yourself).
+       </li>
+       <li>
+        Disagreement between code and specification.
+       </li>
+       <li>
+        Off-by-one errors.
+       </li>
+       <li>
+        Global variables, and other too-large variable scopes.
+       </li>
+       <li>
+        Optimistic, undefensive programming.
+       </li>
+       <li>
+        Magic numbers.
+       </li>
+       <li>
+        …
+       </li>
+      </ul>
+      <p>
+       <strong>
+        Unclear, messy code.
+       </strong>
+      </p>
+      <ul>
+       <li>
+        Bad variable or method names.
+       </li>
+       <li>
+        Inconsistent indentation.
+       </li>
+       <li>
+        Convoluted control flow (if and while statements) that could be simplified.
+       </li>
+       <li>
+        Packing too much into one line of code, or too much into one method.
+       </li>
+       <li>
+        Failing to comment obscure code.
+       </li>
+       <li>
+        Having too many trivial comments that are simply redundant with the code.
+       </li>
+       <li>
+        Variables used for more than one purpose.
+       </li>
+       <li>
+        …
+       </li>
+      </ul>
+      <p>
+       <strong>
+        Misunderstandings of Java.
+       </strong>
+      </p>
+      <ul>
+       <li>
+        Misuse of
+        <code>
+         ==
+        </code>
+        or
+        <code>
+         .equals()
+        </code>
+        .
+       </li>
+       <li>
+        Misuse of arrays or
+        <code>
+         List
+        </code>
+        s.
+       </li>
+       <li>
+        …
+       </li>
+      </ul>
+      <p>
+       <strong>
+        Misusing (or failing to use) essential design concepts.
+       </strong>
+      </p>
+      <ul>
+       <li>
+        Incomplete or incorrect specification for a method or class.
+       </li>
+       <li>
+        Representation exposure for a data abstraction.
+       </li>
+       <li>
+        Immutable datatypes that expose themselves to change.
+       </li>
+       <li>
+        Invariants that aren’t really invariant, or aren’t even stated.
+       </li>
+       <li>
+        Failure to implement the
+        <code>
+         Object
+        </code>
+        contract correctly (
+        <code>
+         equals
+        </code>
+        and
+        <code>
+         hashCode
+        </code>
+        ).
+       </li>
+       <li>
+        …
+       </li>
+      </ul>
+      <p>
+       Positive comments are also a good thing.
+Don’t be afraid to make comments about things you really like, for example:
+      </p>
+      <p>
+       <strong>
+        Unusually elegant code.
+       </strong>
+      </p>
+      <p>
+       <strong>
+        Creative solutions.
+       </strong>
+      </p>
+      <p>
+       <strong>
+        Great design.
+       </strong>
+      </p>
+     </div>
+     <h2 id="process">
+      Process
+     </h2>
+     <div data-outline="process">
+      <p>
+       <em>
+        Note: The Caesar code review system is not available to OpenCourseWare users. It is described here to better
+	explain the 6.005 code review process.
+       </em>
+      </p>
+      <p>
+       We will be using a web-based code-reviewing system called Caesar, built here at MIT.
+Caesar is different from other code review tools (like Rietveld and Review Board) in several ways.
+It’s designed for reviewing whole programs, rather than changesets.
+It divides up a program into pieces, assigns them to multiple reviewers, and supports discussion-based reviewing with threaded comments and up and down votes.
+It automatically ignores widely-repeated code, like boilerplate or library code, in order to focus attention on code that’s worth the reviewers’ time.
+With this system, you will read small bits of code written by several other students, and many other students will each read a small bit of yours.
+      </p>
+      <p>
+       Here’s how the process will typically go.
+Only problem set code will be reviewed.
+Team projects will not go through this process.
+      </p>
+      <p>
+       <strong>
+        Beta due date:
+       </strong>
+       problem set is due.
+      </p>
+      <p>
+       <strong>
+        Night of beta due date:
+       </strong>
+       submitted code is loaded into Caesar, and an announcement goes out by email to all reviewers that the reviewing process is open.
+      </p>
+      <p>
+       <strong>
+        1-2 days after beta due date:
+       </strong>
+       you should visit Caesar, read the code that you were assigned, and make comments about them.
+For each piece of code you review, you can:
+      </p>
+      <ul>
+       <li>
+        <p>
+         <strong>
+          Make a comment
+         </strong>
+         <br>
+          by clicking on a line of code or selecting a range of lines, and typing your comment.
+         </br>
+        </p>
+       </li>
+       <li>
+        <p>
+         <strong>
+          Reply to another comment
+         </strong>
+         <br>
+          by clicking on Reply.
+You can use this to clarify, expand on, or disagree with comments made by other reviewers.
+         </br>
+        </p>
+       </li>
+       <li>
+        <p>
+         <strong>
+          Upvote a comment
+         </strong>
+         <br>
+          by clicking the thumbs-up icon.
+Use this to agree with a comment made by another reviewer.
+Some comments in the system are made automatically by the
+          <a href="//checkstyle.sourceforge.net/">
+           Checkstyle
+          </a>
+          style checker, and it’s particularly useful for human reviewers to upvote or downvote its comments as appropriate.
+         </br>
+        </p>
+       </li>
+       <li>
+        <p>
+         <strong>
+          Downvote a comment
+         </strong>
+         <br>
+          by clicking on the thumbs-down icon.
+If you’re disagreeing with a human, then it’s polite and helpful to also Reply to explain why.
+         </br>
+        </p>
+       </li>
+      </ul>
+      <p>
+       <strong>
+        2 days after beta due date:
+       </strong>
+       code reviews are due.
+      </p>
+      <p>
+       <strong>
+        On code review due date:
+       </strong>
+       course staff (TAs, LAs, instructors) review the reviews: upvoting, downvoting, replying, and commenting as appropriate, and looking for examples worth highlighting for the whole class.
+      </p>
+      <p>
+       <strong>
+        Day after code review date:
+       </strong>
+       Look at your own code, and start revising your code for resubmission.
+Your final submission must address all the code reviews you received – all the human comments plus all the automated checkstyle comments that are marked #important.
+You can address a code review either by changing the code to reflect the review or by including a source code comment in your code that explains why the code wasn’t changed.
+If code reviews are unclear, you can discuss them with the reviewers by replying on the Caesar system, but you still must edit your own code in reaction to the review.
+A grader will check your final submission and deduct points if it hasn’t addressed the code reviews.
+Needless to say, if you didn’t get any code review comments – which sometimes happens – then you don’t have to address any code review comments.
+      </p>
+     </div>
+     <h2 id="privacy_visibility">
+      Privacy &amp; Visibility
+     </h2>
+     <div data-outline="privacy_visibility">
+      <p>
+       <strong>
+        As a code author, you are anonymous.
+       </strong>
+       The system does not display your name with any of the code you wrote.
+Please don’t put your full name, username, email address, or other identifying information in your source code.
+We try to strip out your name and username if it appears, but this process isn’t perfect, especially since some of you have names that are pretty common in source code.
+Yes, I’m looking at you, little
+       <a href="//xkcd.com/327/">
+        Bobby Tables
+       </a>
+       .
+      </p>
+      <p>
+       <strong>
+        As a reviewer, you are fully identified.
+       </strong>
+       The system displays your name and username with every review comment, reply, upvote, or downvote that you were responsible for.
+All registered users can see your name and what you wrote.
+      </p>
+      <p>
+       <strong>
+        All reviewers, all code, and all comments are visible to registered users.
+       </strong>
+       The “all users” link shows a list of all users, and each user has a profile page showing all the comments that they have made.
+A URL for a chunk of code or a review comment can be viewed by anybody logged in to Caesar, regardless of whether they were assigned as a reviewer for that particular chunk.
+      </p>
+     </div>
+     <h2 id="reputation">
+      Reputation
+     </h2>
+     <div data-outline="reputation">
+      <p>
+       As a reviewer in Caesar, you have a reputation score, shown in parentheses after your name.
+You earn reputation points as follows:
+      </p>
+      <ul>
+       <li>
+        +1 pt for each upvote (by another user) of a comment you wrote
+       </li>
+       <li>
+        +5 to +10 pts for writing a comment that is selected for highlighting
+       </li>
+       <li>
+        +100 pts for passing 6.005/6.170.
+       </li>
+      </ul>
+      <p>
+       If you start reviewing early, then you are more likely to get upvotes.
+If you write good comments, then you are more likely to get upvotes.
+      </p>
+      <p>
+       As a student in 6.005, your numeric reputation score has no effect whatsoever on your grade.
+Your participation grade does depend heavily on code reviewing, but the
+       <em>
+        reputation score
+       </em>
+       itself is irrelevant to that.
+Instead, we will base your participation grade on the quantity and quality of the actual reviewing that you’ve done, by looking at the activity history on your profile page.
+      </p>
+     </div>
+     <h2 id="respect">
+      Respect
+     </h2>
+     <div data-outline="respect">
+      <p>
+       <strong>
+        Be polite.
+       </strong>
+       Sarcasm, insults, and belittling words have no place in a code review.
+It doesn’t matter whether you’re talking about a person (a fellow reviewer or a code author) or about code.
+Don’t call code “stupid,” because that transfers all too easily to the author of the code, whether you meant it that way or not.
+      </p>
+      <p>
+       <strong>
+        Be constructive.
+       </strong>
+       Don’t just criticize, but be helpful: point the way toward solutions.
+“Hopeless mess” is not a constructive comment; “name the variables more descriptively, e.g. tmp1 is not a great name” is much more constructive.
+      </p>
+      <p>
+       As a reviewer, you should downvote comments by others that are unconstructive or rude, and serious problems should be referred to the teaching staff.
+      </p>
+      <p>
+       As a code author, you should read your feedback carefully, and keep an open mind.
+Don’t get defensive.
+If your reviewers find your code confusing, then you should consider what this says about its clarity and maintainability in the real world.
+If you disagree with a comment, you can reply to it and engage the reviewer in a discussion, but keep in mind that this makes your identity visible.
+      </p>
+     </div>
+     <h2 id="faq_for_reviewers">
+      FAQ for Reviewers
+     </h2>
+     <div data-outline="faq_for_reviewers">
+      <p>
+       <strong>
+        Does reviewing affect my grade?
+       </strong>
+       Yes, it contributes to your participation grade; see the
+       <a href="#reputation">
+        Reputation
+       </a>
+       section above.
+      </p>
+      <p>
+       <strong>
+        Does my reviewing affect other people’s grades?
+       </strong>
+       Not directly.
+Problem set grades do not take code reviewing into account, and other reviewers’ participation grades are not affected by your upvotes or downvotes.
+But your reviewing will hopefully help other students become better programmers and acquire a better understanding of the course, and indirectly improve their grades.
+      </p>
+      <p>
+       <strong>
+        How many classes do I need to review, and how much do I need to do on each one?
+       </strong>
+       The number you are assigned will depend on the size of the problem set, but will not exceed 10 classes.
+At a minimum, you must do at least one thing on each class assigned to you – make a comment, reply to a comment, upvote, or downvote.
+      </p>
+      <p>
+       <strong>
+        I don’t feel like I know anything.
+How can I possibly review other people’s code?
+       </strong>
+       You know more than you think you do.
+You can read for clarity, comment on places where the code is confusing, look for problems we read about or talked about in class, etc.
+      </p>
+      <p>
+       <strong>
+        What if I can’t find anything wrong?
+       </strong>
+       You can write a specific positive comment about something good.
+      </p>
+      <p>
+       <strong>
+        What are these “checkstyle” comments?
+       </strong>
+       They are generated automatically by a style checker called
+       <a href="//checkstyle.sourceforge.net/">
+        Checkstyle
+       </a>
+       .
+Some of these comments might be wrong or inappropriate for the situation, so please use upvoting and downvoting to review Checkstyle too.
+      </p>
+      <p>
+       <strong>
+        How much of the whole program do I have to try to understand?
+       </strong>
+       Caesar presents each class in isolation, and asks for comments just for that class.
+We don’t expect you to look at anything else, or to spend time struggling to figure out whether it’s correct.
+If you want to see the rest of the program, you can do so using the “view all code” link.
+But again, it’s not expected.
+      </p>
+      <p>
+       <strong>
+        How can I find out who wrote this code?
+       </strong>
+       Code authors are anonymous until they reveal themselves – e.g. by replying to a comment and stating that they’re the code author.
+You can write a comment asking a code author to reveal their identity, or contact you, if you wish.
+If there is a serious situation requiring the identity of the code author – e.g., a potential case of plagiarism – then bring it to the attention of the teaching staff.
+      </p>
+     </div>
+     <h2 id="faq_for_code_authors">
+      FAQ for Code Authors
+     </h2>
+     <div data-outline="faq_for_code_authors">
+      <p>
+       <strong>
+        Can somebody use my code to cheat in the class?
+       </strong>
+       Since code reviewing doesn’t start until after the deadline, this would be a problem only for students with extensions.
+Those students may not review code until after their extended deadline.
+      </p>
+      <p>
+       <strong>
+        Is it OK to break my anonymity?
+       </strong>
+       Yes.
+Please let the reviewing process end before you get involved in any discussions of your code, but after that, if you want to join the discussion or directly contact one of your reviewers, you can do so.
+      </p>
+      <p>
+       <strong>
+        Can I look at the reviews of my code while reviewing is still in progress?
+       </strong>
+       Yes, you can watch your reviews during the reviewing period, but don’t jump in defensively.
+See
+       <a href="#respect">
+        Respect
+       </a>
+       above.
+      </p>
+     </div>
+    </div>
+   </div>
+  </main>
+  <footer>
+   MIT EECS
+  </footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+</html>
+<!-- Handout delivered Tue Mar 15 2016 14:55:00 GMT-0400 (EDT) -->

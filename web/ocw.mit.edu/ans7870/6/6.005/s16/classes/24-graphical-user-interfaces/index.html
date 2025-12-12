@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/24-graphical-user-interfaces/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:22 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    Reading 24: Graphical User Interfaces
+   </title>
+   <link href="../../web/handout-style.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="../../index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#reading_24_graphical_user_interfaces">
+      Reading 24: Graphical User Interfaces
+     </a>
+    </li>
+    <li>
+     <a href="#view_tree">
+      View Tree
+     </a>
+    </li>
+    <li>
+     <a href="#how_the_view_tree_is_used">
+      How the View Tree is Used
+     </a>
+    </li>
+    <li>
+     <a href="#input_handling">
+      Input Handling
+     </a>
+    </li>
+    <li>
+     <a href="#separating_frontend_from_backend">
+      Separating Frontend from Backend
+     </a>
+    </li>
+    <li>
+     <a href="#background_processing_in_graphical_user_interfaces">
+      Background Processing in Graphical User Interfaces
+     </a>
+    </li>
+    <li>
+     <a href="#summary">
+      Summary
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="reading_24_graphical_user_interfaces">
+    Reading 24: Graphical User Interfaces
+   </h1>
+   <div data-outline="reading_24_graphical_user_interfaces">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <h4>
+      Software in 6.005
+     </h4>
+     <table class="table table-striped no-markdown">
+      <tbody>
+       <tr>
+        <th width="33%">
+         Safe from bugs
+        </th>
+        <th>
+         Easy to understand
+        </th>
+        <th>
+         Ready for change
+        </th>
+       </tr>
+       <tr>
+        <td>
+         Correct today and correct in the unknown future.
+        </td>
+        <td>
+         Communicating clearly with future programmers, including future you.
+        </td>
+        <td>
+         Designed to accommodate change without rewriting.
+        </td>
+       </tr>
+      </tbody>
+     </table>
+     <h4>
+      Objectives
+     </h4>
+     <p>
+      Today we’ll take a high-level look at the software architecture of GUI software, focusing on the design patterns that have proven most useful.  Three of the most important patterns are:
+     </p>
+     <ul>
+      <li>
+       the view tree, which is a central feature in the architecture of every important GUI toolkit;
+      </li>
+      <li>
+       the model-view-controller pattern, which separates input, output, and data;
+      </li>
+      <li>
+       the listener pattern, which is essential to decoupling the model from the view and controller.
+      </li>
+     </ul>
+     <h2 id="view_tree">
+      View Tree
+     </h2>
+     <div data-outline="view_tree">
+      <div class="panel panel-figure pull-right pull-margin">
+       <img alt="a graphical user interface with views labeled" src="figures/view-tree-screenshot.png" width="400">
+        <img alt="snapshot diagram of the view tree" src="figures/view-tree-snapshot.png" width="400"/>
+       </img>
+      </div>
+      <p>
+       Graphical user interfaces are composed of view objects, each of which occupies a certain portion of the screen, generally a rectangular area called its bounding box. The view concept goes by a variety of names in various UI toolkits.  In
+       <a href="https://en.wikipedia.org/wiki/Swing_(Java)">
+        Java Swing
+       </a>
+       , they’re
+       <code>
+        JComponent
+       </code>
+       objects; in HTML, they’re elements or nodes; in other toolkits, they may be called widgets, controls, or interactors.
+      </p>
+      <p>
+       This leads to the first important pattern we’ll talk about today: the view tree. Views are arranged into a hierarchy of containment, in which some views contain other views.  Typical containers are windows, panels, and toolbars.  The view tree is not just an arbitrary hierarchy, but is in fact a spatial one: child views are nested inside their parent’s bounding box.
+      </p>
+      <span class="clearfix">
+      </span>
+     </div>
+     <h2 id="how_the_view_tree_is_used">
+      How the View Tree is Used
+     </h2>
+     <div data-outline="how_the_view_tree_is_used">
+      <p>
+       Virtually every GUI system has some kind of view tree.  The view tree is a powerful structuring idea, which is loaded with responsibilities in a typical GUI:
+      </p>
+      <p>
+       <strong>
+        Output
+       </strong>
+       .  Views are responsible for displaying themselves, and the view tree directs the display process. GUIs change their output by mutating the view tree.  For example, to show a new set of photos in a photo album GUI, the current thumbnails are removed from the view tree and a new set of thumbnails is added in their place.  A redraw algorithm built into the GUI toolkit automatically redraws the affected parts of the subtree.  In Java Swing, every view in the tree has a
+       <code>
+        paint()
+       </code>
+       method that knows how to draw itself on the screen.  The repaint process is driven by calling
+       <code>
+        paint()
+       </code>
+       on the root of the tree, which recursively calls
+       <code>
+        paint()
+       </code>
+       down through all the descendent nodes of the view tree.
+      </p>
+      <p>
+       <strong>
+        Input
+       </strong>
+       . Views can have input handlers, and the view tree controls how mouse and keyboard input is processed.  More on this in a moment.
+      </p>
+      <p>
+       <strong>
+        Layout
+       </strong>
+       . The view tree controls how the views are laid out on the screen, i.e. how their bounding boxes are assigned.  An automatic layout algorithm automatically calculates positions and sizes of views.  Specialized containers (like
+       <code>
+        JSplitPane
+       </code>
+       ,
+       <code>
+        JScrollPane
+       </code>
+       ) do layout themselves.  More generic containers (
+       <code>
+        JPanel
+       </code>
+       ,
+       <code>
+        JFrame
+       </code>
+       ) delegate layout decisions to a layout manager (e.g.
+       <code>
+        GroupLayout
+       </code>
+       ,
+       <code>
+        BorderLayout
+       </code>
+       ,
+       <code>
+        BoxLayout
+       </code>
+       , …).
+      </p>
+     </div>
+     <h2 id="input_handling">
+      Input Handling
+     </h2>
+     <div data-outline="input_handling">
+      <p>
+       Input is handled somewhat differently in GUIs than we’ve been handling it in parsers and servers.  In those systems, we’ve seen a single parser that peels apart the input and decides how to direct it to different modules of the program.  If a GUI were written that way, it might look like this (in pseudocode):
+      </p>
+      <pre><code class="hljs bash"><span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+    <span class="hljs-built_in">read</span> mouse click
+    <span class="hljs-keyword">if</span> (clicked on Thrash button) <span class="hljs-keyword">do</span>Thrash();
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (clicked on textbox) <span class="hljs-keyword">do</span>PlaceCursor();
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (clicked on a name <span class="hljs-keyword">in</span> the listbox) <span class="hljs-keyword">do</span>SelectItem();
+    ...
+}</code></pre>
+      <p>
+       In a GUI, we don’t directly write this kind of method, because it’s not modular – it mixes up responsibilities for button, listbox, and textbox all in one place.  Instead, GUIs exploit the spatial separation provided by the view tree to provide functional separation as well.  Mouse clicks and keyboard events are distributed around the view tree, depending on where they occur.
+      </p>
+      <p>
+       GUI input event handling is an instance of the
+       <strong>
+        Listener pattern
+       </strong>
+       (also known as Publish-Subscribe). In the Listener pattern:
+      </p>
+      <ul>
+       <li>
+        An event source generates a stream of discrete events, which correspond to state transitions in the source.
+       </li>
+       <li>
+        One or more listeners register interest (subscribe) to the stream of events, providing a function to be called when a new event occurs.
+       </li>
+      </ul>
+      <p>
+       In this case, the mouse is the event source, and the events are changes in the state of the mouse: its x,y position or the state of its buttons (whether they are pressed or released).  Events often include additional information about the transition (such as the x,y position of mouse), which might be bundled into an event object or passed as parameters.
+      </p>
+      <p>
+       When an event occurs, the event source distributes it to all subscribed listeners, by calling their callback methods.
+      </p>
+      <p>
+       The control flow through a graphical user interface proceeds like this:
+      </p>
+      <ul>
+       <li>
+        A top-level event loop reads input from mouse and keyboard.  In Java Swing, and most graphical user interface toolkits, this loop is actually hidden from you.  It’s buried inside the toolkit, and listeners appear to be called magically.
+       </li>
+       <li>
+        For each input event, it finds the right view in the tree (by looking at the x,y position of the mouse) and sends the event to that view’s listeners.
+       </li>
+       <li>
+        Each listener does its thing (which might involve e.g. modifying objects in the view tree), and then
+        <em>
+         returns immediately to the event loop
+        </em>
+        .
+       </li>
+      </ul>
+      <p>
+       The last part – listeners return to the event loop as fast as possible – is very important, because it preserves the responsiveness of the user interface.  We’ll come back to this later in the reading.
+      </p>
+      <p>
+       The Listener pattern isn’t just used for low-level input events like mouse clicks and keyboard keypresses.  Many GUI objects generate their own higher-level events, often as a result of some combination of low-level input events.  For example:
+      </p>
+      <ul>
+       <li>
+        <code>
+         JButton
+        </code>
+        sends an action event when it is pressed (whether by mouse or keyboard)
+       </li>
+       <li>
+        <code>
+         JList
+        </code>
+        sends a selection event when the selected element changes (whether by mouse or by keyboard)
+       </li>
+       <li>
+        <code>
+         JTextField
+        </code>
+        sends change events when the text inside it changes for any reason
+       </li>
+      </ul>
+      <p>
+       A button can be pressed either by the mouse (with a mouse down and mouse up event) or by the keyboard (which is important for people who can’t use a mouse, like blind users).  So you should always listen for these high-level events, not the low-level input events.  Use an
+       <code>
+        ActionListener
+       </code>
+       to respond to a
+       <code>
+        JButton
+       </code>
+       press, not a mouse listener.
+      </p>
+     </div>
+     <h2 id="separating_frontend_from_backend">
+      Separating Frontend from Backend
+     </h2>
+     <div data-outline="separating_frontend_from_backend">
+      <p>
+       We’ve seen how GUI programs are structured around a view tree, and how input events are handled by attaching listeners to views.  This is the start of a separation of concerns – output handled by views, and input handled by listeners.
+      </p>
+      <p>
+       But we’re still missing the application itself – the backend that represents the data and logic that the user interface is showing and editing.  (Why do we want to separate this from the user interface?)
+      </p>
+      <p>
+       The
+       <strong>
+        Model-View-Controller pattern
+       </strong>
+       has this separation of concerns as its primary goal.  It separates the user interface frontend from the application backend, by putting backend code into the model and frontend code into the view and controller.  MVC also separates input from output; the controller is supposed to handle input, and the view is supposed to handle output.
+      </p>
+      <div class="panel panel-figure pull-right pull-margin">
+       <img alt="Model-View-Controller pattern" src="figures/mvc.png" width="400"/>
+      </div>
+      <p>
+       The
+       <strong>
+        model
+       </strong>
+       is responsible for maintaining application-specific data and providing access to that data.  Models are often mutable, and they provide methods for changing the state safely, preserving its representation invariants. OK, all mutable objects do that.  But a model must also notify its clients when there are changes to its data, so that dependent views can update their displays, and dependent controllers can respond appropriately.  Models do this notification using the listener pattern, in which interested views and controllers register themselves as listeners for change events generated by the model.
+      </p>
+      <p>
+       <strong>
+        View
+       </strong>
+       objects are responsible for output.  A view usually occupies some chunk of the screen, usually a rectangular area.  Basically, the view queries the model for data and draws the data on the screen.  It listens for changes from the model so that it can update the screen to reflect those changes.
+      </p>
+      <p>
+       Finally, the
+       <strong>
+        controller
+       </strong>
+       handles the input.  It receives keyboard and mouse events, and instructs the model to change accordingly.
+      </p>
+      <div class="panel panel-figure pull-right pull-margin">
+       <img alt="Model-View-Controller pattern as shown in a JTextField" src="figures/mvc-textfield.png" width="400"/>
+      </div>
+      <p>
+       A simple example of the MVC pattern is a text field.  The figure at right shows Java Swing’s text field, called
+       <code>
+        JTextField
+       </code>
+       .  Its model is a mutable string of characters.  The view is an object that draws the text on the screen (usually with a rectangle around it to indicate that it’s an editable text field).  The controller is an object that receives keystrokes typed by the user and inserts them into the mutable string.
+      </p>
+      <span class="clearfix">
+      </span>
+      <p>
+       Instances of the MVC pattern appear at many scales in GUI software.  At a higher level, this text field might be part of a view (like an address book editor), with a different controller listening to it (for text-changed events), for a different model (like the address book).  But when you drill down to a lower level, the text field itself is an instance of MVC.
+      </p>
+      <div class="panel panel-figure pull-right pull-margin">
+       <img alt="Model-View-Controller pattern as shown in a filesystem browser" src="figures/mvc-filesystem.png" width="400"/>
+      </div>
+      <p>
+       Here’s a larger example, in which the view is a filesystem browser (like the Mac Finder or Windows Explorer), the model is the disk filesystem, and the controller is an input handler that translates the user’s keystrokes and mouse clicks into operations on the model and view.
+      </p>
+      <span class="clearfix">
+      </span>
+      <p>
+       The separation of model and view has several benefits.  First, it allows the interface to have multiple views showing the same application data.  For example, a database field might be shown in a table and in an editable form at the same time.  Second, it allows views and models to be reused in other applications. The MVC pattern enables the creation of user interface toolkits, which are libraries of reusable views.  Java Swing is such a toolkit.  You can easily reuse view classes from this library (like
+       <code>
+        JButton
+       </code>
+       and
+       <code>
+        JTree
+       </code>
+       ) while plugging your own models into them.
+      </p>
+     </div>
+     <h2 id="background_processing_in_graphical_user_interfaces">
+      Background Processing in Graphical User Interfaces
+     </h2>
+     <div data-outline="background_processing_in_graphical_user_interfaces">
+      <p>
+       The last major topic for today connects back to concurrency.
+      </p>
+      <p>
+       First, some motivation.  Why do we need to do background processing in graphical user interfaces?  Even though computer systems are steadily getting faster, we’re also asking them to do more.  Many programs need to do operations that may take some time: retrieving URLs over the network, running database queries, scanning a filesystem, doing complex calculations, etc.
+      </p>
+      <p>
+       But graphical user interfaces are event-driven programs, which means (generally speaking) everything is triggered by an input event handler.  For example, in a web browser, clicking a hyperlink starts loading a new web page.  But if the click handler is written so that it actually retrieves the web page itself, then the web browser will be very painful to use.  Why?  Because its interface will appear to freeze up until the click handler finishes retrieving the web page and returns to the event loop.  Here’s why.
+      </p>
+      <p>
+       This happens because input handling and screen repainting is all handled from a single thread.  That thread (called the event-dispatch thread) has a loop that reads an input event from the queue and dispatches it to listeners on the view tree.  When there are no input events left to process, it repaints the screen.  But if an input handler you’ve written delays returning to this loop – because it’s blocking on a network read, or because it’s searching for the solution to a big Sudoku puzzle – then input events stop being handled, and the screen stops updating.  So long tasks need to run in the background.
+      </p>
+      <p>
+       In Java, the event-dispatch thread is distinct from the main thread of the program (see below).  It is started automatically when a user interface object is created.  As a result, every Java GUI program is automatically multithreaded.  Many programmers don’t notice, because the main thread typically doesn’t do much in a GUI program – it starts creation of the view, and then the main thread just exits, leaving only the event-dispatch thread to do the main work of the program.
+      </p>
+      <p>
+       The fact that Swing programs are multithreaded by default creates risks.  There’s very often a shared mutable datatype in your GUI: the model. If you use background threads to modify the model without blocking the event-dispatch thread, then you have to make sure your data structure is threadsafe.
+      </p>
+      <p>
+       But another important shared mutable datatype in your GUI is the view tree.  Java Swing’s view tree is not threadsafe.  In general, you cannot safely call methods on a Swing object from anywhere but the event-dispatch thread.
+      </p>
+      <p>
+       The view tree is a big meatball of shared state, and the Swing specification doesn’t guarantee that there’s any lock protecting it.  Instead the view tree is
+       <strong>
+        confined to the event-dispatch thread
+       </strong>
+       , by specification.  So it’s ok to access view objects from the event-dispatch thread (i.e., in response to input events), but the Swing specification forbids touching – reading or writing – any
+       <code>
+        JComponent
+       </code>
+       objects from a different thread.  See
+       <a href="http://www.javaworld.com/javaworld/jw-08-2007/jw-08-swingthreading.html">
+        Swing threading and the event-dispatch thread
+       </a>
+       .
+      </p>
+      <p>
+       In the actual Swing implementation, there is one big lock (
+       <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Component.html#getTreeLock--">
+        <code>
+         Component.getTreeLock()
+        </code>
+       </a>
+       ) but only some Swing methods use it, so it’s not effective as a synchronization mechanism.
+      </p>
+      <p>
+       The safe way to access the view tree is to do it from the event-dispatch thread.  So Swing takes a clever approach: it uses the event queue itself as a message-passing queue.  In other words, you can put your own custom messages on the event queue, the same queue used for mouse clicks, keypresses, button action events, and so forth.  Your custom message is actually a piece of executable code, an object that implements
+       <code>
+        Runnable
+       </code>
+       , and you put it on the queue using
+       <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/SwingUtilities.html#invokeLater-java.lang.Runnable-">
+        <code>
+         SwingUtilities.invokeLater
+        </code>
+       </a>
+       .  For example:
+      </p>
+      <pre><code class="language-java hljs">SwingUtilities.invokeLater(<span class="hljs-keyword">new</span> Runnable() { 
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{ 
+        content.add(thumbnail); 
+        ...
+    } 
+});</code></pre>
+      <p>
+       The
+       <code>
+        invokeLater()
+       </code>
+       drops this
+       <code>
+        Runnable
+       </code>
+       object at the end of the queue, and when Swing’s event loop reaches it, it simply calls
+       <code>
+        run()
+       </code>
+       . Thus the body of
+       <code>
+        run()
+       </code>
+       ends up run by the event-dispatch thread, where it can safely call observers and mutators on the view tree.
+      </p>
+      <div class="handout-solo alert alert-warning">
+       <p>
+        In the Java Tutorials, read:
+       </p>
+       <ul>
+        <li>
+         <a class="alert-link" href="http://docs.oracle.com/javase/tutorial/uiswing/concurrency/index.html">
+          Concurrency in Swing
+         </a>
+         (1 page)
+        </li>
+        <li>
+         <a class="alert-link" href="http://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html">
+          Initial Threads
+         </a>
+         (1 page)
+        </li>
+        <li>
+         <a class="alert-link" href="http://docs.oracle.com/javase/tutorial/uiswing/concurrency/dispatch.html">
+          The Event Dispatch Thread
+         </a>
+         (1 page)
+        </li>
+       </ul>
+      </div>
+     </div>
+     <h2 id="summary">
+      Summary
+     </h2>
+     <div data-outline="summary">
+      <ul>
+       <li>
+        <p>
+         The view tree organizes the screen into a tree of nested rectangles, and it is used in dispatching input events as well as displaying output.
+        </p>
+       </li>
+       <li>
+        <p>
+         The Listener pattern sends a stream of events (like mouse or keyboard events, or button action events) to registered listeners.
+        </p>
+       </li>
+       <li>
+        <p>
+         The Model-View-Controller pattern separates responsibilities: model=data, view=output, controller=input.
+        </p>
+       </li>
+       <li>
+        <p>
+         Long-running processing should be moved to a background thread, but the Swing view tree is confined to the event-dispatch thread.  So accessing Swing objects from another thread requires using the event loop as a message-passing queue, to get back to the event-dispatch thread.
+        </p>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/classes/24-graphical-user-interfaces/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:27 GMT -->
+</html>
+<!-- Handout delivered Tue Apr 05 2016 21:07:35 GMT-0400 (EDT) -->

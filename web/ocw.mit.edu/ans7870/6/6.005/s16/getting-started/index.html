@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html>
+ 
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/getting-started/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:30 GMT -->
+<head>
+  <meta charset="utf-8">
+   <title>
+    Getting Started
+   </title>
+   <link href="../web/handout-style.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+   </link>
+  </meta>
+ </head>
+ <body>
+  <header>
+   <a href="../index.html">
+    6.005 — Software Construction on MIT OpenCourseWare
+   </a>
+   |
+   <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-005-software-construction-spring-2016/">
+    OCW 6.005 Homepage
+   </a>
+   <div>
+    Spring 2016
+   </div>
+  </header>
+  <nav class="table-of-contents col-sm-2">
+   <ul class="nav">
+    <li>
+     <a href="#getting_started">
+      Getting Started
+     </a>
+    </li>
+    <li>
+     <a href="#software">
+      Step 1: Install software
+     </a>
+    </li>
+    <li>
+     <a href="#config-eclipse">
+      Step 2: Configure Eclipse
+     </a>
+    </li>
+    <li>
+     <a href="#extra">
+      Step 3: Install more software
+     </a>
+    </li>
+    <li>
+     <a href="#terminal">
+      Step 4: Open the command line
+     </a>
+    </li>
+    <li>
+     <a href="#config-git">
+      Step 5: Configure Git
+     </a>
+    </li>
+    <li>
+     <a href="#git">
+      Step 6: Learn the Git workflow
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <main class="container-fluid">
+   <h1 class="handout-title col-sm-8 col-sm-offset-2" id="getting_started">
+    Getting Started
+   </h1>
+   <div data-outline="getting_started">
+    <div class="markdown col-sm-8 col-sm-offset-2 converted">
+     <p>
+      Follow this guide to set up the Eclipse IDE and the Git version control system on your computer and learn how to use them in 6.005.
+     </p>
+     <h3 id="learning_java">
+      Learning Java
+     </h3>
+     <div data-outline="learning_java">
+      <div class="handout-info alert alert-info">
+       <p>
+        <strong>
+         6.005 requires you to get up to speed quickly with the basics of Java.
+        </strong>
+        If you are not familiar with Java:
+       </p>
+       <ul>
+        <li>
+         review
+         <a class="alert-link" href="java.html">
+          materials for learning Java
+         </a>
+        </li>
+        <li>
+         review
+         <a class="alert-link" href="../classes/02-basic-java/index.html">
+          Reading 2
+         </a>
+        </li>
+       </ul>
+      </div>
+     </div>
+     <div data-outline="office_and_lab_hours">
+      <h2 id="software">
+       Step 1: Install software
+      </h2>
+      <div data-outline="software">
+       <p>
+        You need to install the following software on your laptop for 6.005:
+       </p>
+       <ul>
+        <li>
+         <p>
+          <strong>
+           <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">
+            JDK 8
+           </a>
+          </strong>
+          (for Windows, Linux, or OS X): From this page, download
+          <em>
+           Java SE Development Kit 8u71
+          </em>
+          (you don’t need the demos and samples).
+         </p>
+         <p>
+          The latest version of Java is required (either 8u71 or 8u72).
+         </p>
+        </li>
+        <li>
+         <p>
+          <strong>
+           <a href="http://www.eclipse.org/downloads/packages/eclipse-ide-java-developers/mars1">
+            Eclipse Mars.1
+           </a>
+          </strong>
+          : Download
+          <em>
+           Eclipse IDE for Java Developers
+          </em>
+          (download links are on the right side of the page).
+For
+          <strong>
+           Windows
+          </strong>
+          users, see
+          <a href="http://support.microsoft.com/kb/827218">
+           determining whether you’re running a 32- or 64-bit OS
+          </a>
+          .
+Unpack the downloaded .zip or .tar.gz file and run Eclipse.
+         </p>
+         <p>
+          The latest version of Eclipse is required (Mars.1, a.k.a. 4.5.1).
+         </p>
+        </li>
+        <li>
+         <p>
+          <strong>
+           <a href="http://www.git-scm.com/">
+            Git
+           </a>
+          </strong>
+          : We will be using the command-line interface to Git.
+         </p>
+         <p>
+          If you already have Git installed, you do not need to install the latest version.
+          <strong>
+           Windows
+          </strong>
+          users should look for Git Bash.
+          <strong>
+           OS X &amp; Linux
+          </strong>
+          users should try running
+          <code>
+           git
+          </code>
+          in a terminal.
+         </p>
+         <p>
+          The Git site should prompt you to download the appropriate version.
+Follow the instructions in the README file in the downloaded .zip or .dmg file.
+         </p>
+         <p>
+          <strong>
+           Windows
+          </strong>
+          : choose “use Git from the windows command prompt”, “checkout windows-style, commit unix-style line endings”, and select to add a shortcut to Desktop during installation (this creates a Git Bash shortcut which you will use for all Git commands).
+         </p>
+         <p>
+          <strong>
+           OS X
+          </strong>
+          : if you receive an “unidentified developer” warning, right-click the .pkg file, select
+          <em>
+           Open
+          </em>
+          , then click
+          <em>
+           Open
+          </em>
+          .
+         </p>
+        </li>
+       </ul>
+      </div>
+      <h2 id="config-eclipse">
+       Step 2: Configure Eclipse
+      </h2>
+      <div data-outline="config-eclipse">
+       <p>
+        The Eclipse integrated development environment (IDE) is a powerful, flexible, complicated, and occasionally frustrating set of tools for developing and debugging programs, especially in Java.
+       </p>
+       <p>
+        When you run Eclipse, you will be prompted for a “workspace” directory, where Eclipse will store its configuration and metadata.
+The default location is a directory called
+        <code>
+         workspace
+        </code>
+        in your home directory.
+You should not run more than one copy of Eclipse at the same time with the same workspace.
+       </p>
+       <p>
+        The first time you run Eclipse, it will show you a welcome screen.
+Click the “Workbench” button and you’re ready to begin.
+       </p>
+       <p>
+        You can store your code in the workspace directory, but this is not recommended.
+On the left side of your Eclipse window is the Package Explorer, which shows you all the projects in your workspace.
+        <strong>
+         The Package Explorer looks like a file browser, but it is not.
+        </strong>
+        It rearranges files and folders, includes things that are not files or folders, and can include projects stored
+        <strong>
+         anywhere on disk
+        </strong>
+        that have been added (but not copied into) to the workspace.
+       </p>
+       <ol>
+        <li>
+         <p>
+          Open Eclipse preferences.
+         </p>
+         <p>
+          <strong>
+           Windows &amp; Linux
+          </strong>
+          : go to
+          <em>
+           Window → Preferences
+          </em>
+          .
+         </p>
+         <p>
+          <strong>
+           OS X
+          </strong>
+          : go to
+          <em>
+           Eclipse → Preferences
+          </em>
+          .
+         </p>
+        </li>
+        <li>
+         <p>
+          Make sure Eclipse is configured to use
+          <strong>
+           Java 8
+          </strong>
+          .
+         </p>
+         <ol>
+          <li>
+           <p>
+            In preferences, go to
+            <em>
+             Java → Installed JREs
+            </em>
+            .
+Ensure that “Java SE 8” or “1.8.0_71” is the only one checked.
+If it’s not listed, click Search.
+           </p>
+          </li>
+          <li>
+           <p>
+            Go to
+            <em>
+             Java → Compiler
+            </em>
+            and set “Compiler compliance level” to 1.8.
+Click OK and Yes on any prompts.
+           </p>
+          </li>
+         </ol>
+        </li>
+        <li>
+         <p>
+          Make sure
+          <strong>
+           assertions are always on
+          </strong>
+          .
+Assertions are a great tool for keeping your code safe from bugs, but Java has them off by default.
+         </p>
+         <p>
+          In preferences, go to
+          <em>
+           Java → Installed JREs
+          </em>
+          .
+Click “Java SE 8”, click “Edit…”, and in the “Default VM arguments” box enter:
+          <code>
+           -ea
+          </code>
+          (which stands for
+          <em>
+           enable assertions
+          </em>
+          ).
+         </p>
+        </li>
+        <li>
+         <p>
+          <strong>
+           Tab policy
+          </strong>
+          .
+Configure your editor to use spaces instead of tabs, so your code looks the same in all editors regardless of how that editor displays tab characters.
+         </p>
+         <p>
+          In preferences, go to
+          <em>
+           Java → Code Style → Formatter
+          </em>
+          .
+Click the “Edit…” button next to the active profile.
+In the new window, change the Tab policy to “Spaces only.”
+Keep the Indentation size and Tab size at 4.
+To save your changes, enter a new “Profile name” at the top of the window and click OK.
+         </p>
+        </li>
+       </ol>
+       <div class="handout-solo alert alert-warning">
+        <p>
+         The
+         <a class="alert-link" href="eclipse.html">
+          6.005 Eclipse FAQ
+         </a>
+         has some tips and tricks to help you make the most of Eclipse.
+        </p>
+       </div>
+      </div>
+
+      <h2 id="terminal">
+       Step 3: Open the command line
+      </h2>
+      <div data-outline="terminal">
+       <p>
+        One thing that makes learning Git harder for many students is that it’s a command-line program.
+If you’re not familiar with the command-line, this can be confusing.
+       </p>
+       <p>
+        A command-line is just an interface to your computer, totally analogous to the Finder or Windows Explorer, except that it’s text-based.
+As the name implies, you interact with it through “commands” — each line of input begins with a command and might have zero or more arguments, separated by spaces.
+The command-line keeps track of what directory (folder) you’re in, which is important to many of the commands you might be running.
+       </p>
+       <p>
+        On
+        <strong>
+         OS X and Linux
+        </strong>
+        , open the
+        <strong>
+         Terminal
+        </strong>
+        application.
+       </p>
+       <p>
+        On
+        <strong>
+         Windows
+        </strong>
+        ,
+        <a href="http://git-scm.com/">
+         Git for Windows
+        </a>
+        includes
+        <strong>
+         Git Bash
+        </strong>
+        .
+Run Git Bash to open a terminal where you can run all the commands below, in addition to Git commands.
+       </p>
+       <h3 id="common_commands">
+        Common commands
+       </h3>
+       <div data-outline="common_commands">
+        <ul>
+         <li>
+          <p>
+           <strong>
+            <code>
+             cd
+            </code>
+           </strong>
+           (stands for “change directory”)
+          </p>
+          <p>
+           Changes the current directory.
+In you’re in a directory that has a subdirectory called
+           <code>
+            hello
+           </code>
+           , then
+           <code>
+            cd hello
+           </code>
+           moves into that subdirectory.
+          </p>
+          <p>
+           Use
+           <code>
+            cd ..
+           </code>
+           to move to the parent directory of your current directory.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            <code>
+             pwd
+            </code>
+           </strong>
+           (“print working directory”)
+          </p>
+          <p>
+           Prints out the current directory, if you’re not sure where you are.
+          </p>
+          <p>
+           On a well-configured system, your current directory is displayed as part of the
+           <em>
+            prompt
+           </em>
+           that the system shows when it’s ready to receive a command.
+If that’s not the case on your system, post on Piazza to get help configuring your prompt.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            <code>
+             ls
+            </code>
+           </strong>
+           (“list”)
+          </p>
+          <p>
+           Lists the files in the current directory.
+          </p>
+          <p>
+           Use
+           <code>
+            ls -l
+           </code>
+           for extra information (a “long” listing) about the files.
+Use
+           <code>
+            ls -a
+           </code>
+           (stands for “all”) to show hidden files, which are files and subdirectories whose names begin with a period.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            <code>
+             mkdir
+            </code>
+           </strong>
+           (“make directory”)
+          </p>
+          <p>
+           Creates a new directory in the current directory.
+To create a directory called
+           <code>
+            goodbye
+           </code>
+           , use
+           <code>
+            mkdir goodbye
+           </code>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            <em>
+             up arrow
+            </em>
+            and
+            <em>
+             down arrow
+            </em>
+           </strong>
+          </p>
+          <p>
+           Use
+           <em>
+            up arrow
+           </em>
+           to put the command you just ran back on the command line.
+You can now edit that command to fix a typo, or just press
+           <em>
+            enter
+           </em>
+           to run it again.
+          </p>
+          <p>
+           Use the up and down arrow keys to navigate through your history of commands, so you never have to re-type a long command line.
+          </p>
+         </li>
+        </ul>
+       </div>
+      </div>
+      <h2 id="config-git">
+       Step 4: Configure Git
+      </h2>
+      <div data-outline="config-git">
+       <p>
+        Before using Git, we’ll do some required setup and make it behave a little nicer.
+       </p>
+       <ol>
+        <li>
+         <p>
+          <strong>
+           Who are you?
+          </strong>
+         </p>
+         <p>
+          Every Git commit includes the author’s name and e-mail.
+Make sure Git knows your name and email by running these two commands:
+         </p>
+         <pre><code>git config --global user.name "Your Name"
+git config --global user.email username@mit.edu</code></pre>
+        </li>
+        <li>
+         <p>
+          <strong>
+           Editing commit messages.
+          </strong>
+         </p>
+         <p>
+          Every Git commit has a descriptive message, called the commit message.
+Pick one of the two options below to set up your commit message editor.
+         </p>
+         <table class="side-by-side" style="margin-left:40px">
+          <tbody>
+           <tr>
+            <td style="width:50%">
+             <h4>
+              Option 1: set up an easy-to-use editor
+             </h4>
+             <h4>
+              OS X and Linux: use nano
+             </h4>
+             <p>
+              <a href="http://www.nano-editor.org/">
+               nano
+              </a>
+              is a simple text editor.
+It does not come with the Windows version of Git, so Windows users should choose a different option.
+             </p>
+             <p>
+              To see if you have nano, try running:
+             </p>
+             <pre><code>nano</code></pre>
+             <p>
+              in the terminal.
+The result should be a simple editor with instructions at the bottom of the screen; quit with
+              <code>
+               ctrl-X
+              </code>
+              .
+If that worked:
+             </p>
+             <pre><code>git config --global core.editor nano</code></pre>
+             <p>
+              will configure Git to use the nano editor.
+The commands to use the text editor (like copy, paste, quit, etc.) will be shown on the bottom of the screen.
+The
+              <code>
+               ^
+              </code>
+              symbol represents the
+              <code>
+               ctrl
+              </code>
+              key.
+For example, you can press
+              <code>
+               ctrl-O
+              </code>
+              to save (nano calls it “write out”) and then
+              <code>
+               ctrl-X
+              </code>
+              to quit.
+             </p>
+             <h4>
+              Windows: use Notepad
+             </h4>
+             <p>
+              You can change the default editor to Notepad with:
+             </p>
+             <pre><code>git config --global core.editor notepad</code></pre>
+             <p>
+              If you prefer to edit your commit messages in the terminal, choose Option 2 instead.
+             </p>
+            </td>
+            <td>
+             <h4>
+              Option 2: use Vim
+             </h4>
+             <p>
+              On OS X and Windows, your default editor will be
+              <a href="http://www.vim.org/">
+               Vim
+              </a>
+              .
+             </p>
+             <p>
+              On Linux, the default editor depends on your distribution.
+             </p>
+             <p>
+              Vim is a popular text editor, but it’s tricky to use.
+             </p>
+             <p>
+              Before making your first commit, try running:
+             </p>
+             <pre><code>vim</code></pre>
+             <p>
+              in the terminal.
+             </p>
+             <p>
+              You start in a mode called “normal mode”.
+You can’t immediately type anything into the file!
+             </p>
+             <p>
+              In order to start typing, press
+              <code>
+               i
+              </code>
+              (stands for “insert”).
+This will bring you to “insert mode”, so named because in this mode you can type text into the file.
+             </p>
+             <p>
+              When you are done typing, press
+              <code>
+               esc
+              </code>
+              .
+This will bring you back to “normal mode”.
+             </p>
+             <p>
+              Once you’re back in normal mode, you can type commands that start with
+              <code>
+               :
+              </code>
+              .
+             </p>
+             <p>
+              To save your work, type
+              <code>
+               :w
+              </code>
+              (stands for “write”) and press return.
+             </p>
+             <p>
+              To exit (quit) Vim, type
+              <code>
+               :q
+              </code>
+              and press return.
+             </p>
+             <p>
+              To save and quit in one command, combine them: type
+              <code>
+               :wq
+              </code>
+              and press return.
+             </p>
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </li>
+        <li>
+         <p>
+          <strong>
+           Add some color.
+          </strong>
+         </p>
+         <p>
+          Out of the box, it can be hard to see and understand all the output that git prints out at you.
+One way to make it a little easier is to add some color.
+Run the following commands to make your git output colorful:
+         </p>
+         <pre><code>git config --global color.branch auto
+git config --global color.diff auto
+git config --global color.interactive auto
+git config --global color.status auto
+git config --global color.grep auto</code></pre>
+        </li>
+        <li>
+         <p>
+          <strong>
+           LOL.
+          </strong>
+         </p>
+         <p>
+          As we’ll see in the next step of this guide,
+          <code>
+           git log
+          </code>
+          is a command for looking at the history of your repository.
+         </p>
+         <p>
+          To create a special version of
+          <code>
+           git log
+          </code>
+          that summarizes the history of your repo, let’s create a
+          <code>
+           git lol
+          </code>
+          <em>
+           alias
+          </em>
+          using the command
+          <strong>
+           (all on one line)
+          </strong>
+          :
+         </p>
+         <pre><code>git config --global alias.lol "log --graph --oneline --decorate --color --all"</code></pre>
+         <p>
+          Now, in any repository you can use:
+         </p>
+         <pre><code>git lol</code></pre>
+         <p>
+          to see an ASCII-art graph of the commit history.
+         </p>
+        </li>
+       </ol>
+      </div>
+      <h2 id="git">
+       Step 5: Learn the Git workflow
+      </h2>
+      <div data-outline="git">
+       <h3 id="what_is_git">
+        What is Git?
+       </h3>
+       <div data-outline="what_is_git">
+        <p>
+         Git is a version control system (VCS).
+The
+         <a href="http://git-scm.com/book">
+          <em>
+           Pro Git
+          </em>
+          book
+         </a>
+         describes what Git is used for:
+        </p>
+        <blockquote>
+         <p>
+          What is version control, and why should you care? Version control is a system
+  that records changes to a file or set of files over time so that you can
+  recall specific versions later. […] It allows you to revert files back to a
+  previous state, revert the entire project back to a previous state, compare
+  changes over time, see who last modified something that might be causing a
+  problem, who introduced an issue and when, and more. Using a VCS also
+  generally means that if you screw things up or lose files, you can easily
+  recover.
+         </p>
+        </blockquote>
+        <p>
+         Some of the most important Git concepts:
+        </p>
+        <ul>
+         <li>
+          <p>
+           <strong>
+            repository:
+           </strong>
+           A folder containing all the files associated with a project (e.g. a 6.005 problem set or team project), as well as the entire history of
+           <em>
+            commits
+           </em>
+           to those files.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            commit (or “revision”):
+           </strong>
+           A snapshot of the files in a repository at a given point in time.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            add (or “stage”):
+           </strong>
+           Before changes to a file can be
+           <em>
+            committed
+           </em>
+           to a repository, the files in question must be
+           <em>
+            added
+           </em>
+           or
+           <em>
+            staged
+           </em>
+           (before each commit).
+This lets you commit changes to only certain files of your choosing at a time, but can also be a bit of a pain if you accidentally forget to add all the files you wanted to commit before committing.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            clone:
+           </strong>
+           Since git is a “distributed” version control system, there is no concept of a centralized git “server” that holds the latest official version of your code.
+Instead, developers “clone” remote repositories that contain files they want access to, and then commit to their local clones.
+Only when they
+           <em>
+            push
+           </em>
+           their local commits to the original remote repository are other developers able to see their changes.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            push:
+           </strong>
+           The act of sending your local commits to a remote repository.
+Again, until you add, commit,
+           <em>
+            and
+           </em>
+           push your changes, no one else can see them.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            pull:
+           </strong>
+           The act of retrieving commits made to a remote repository and writing them into your local repository.
+This is how you are able to see commits made by others after the time at which you made an initial clone.
+          </p>
+         </li>
+        </ul>
+       </div>
+       <h3 id="cloning">
+        Cloning
+       </h3>
+       <div data-outline="cloning">
+        <p>
+         You start working with Git repos in 6.005 by cloning a remote repository into a local repository on your computer.
+        </p>
+        <p>
+         To do this, open the terminal (use Git Bash on Windows) and use the
+         <code>
+          cd
+         </code>
+         command to change to the directory where you would like to store your code.
+Then run:
+        </p>
+        <p class="no-markdown">
+         <code>
+          git clone
+          <em style="background: #ffa">
+           URI-of-remote-repo
+          </em>
+         </code>
+        </p>
+        <p>
+         or
+        </p>
+        <p class="no-markdown">
+         <code>
+          git clone
+          <em style="background: #ffa">
+           URI-of-remote-repo
+          </em>
+          <em style="background: #ffa">
+           project-name
+          </em>
+         </code>
+        </p>
+        <p>
+         Replace
+         <code>
+          URI-of-remote-repo
+         </code>
+         with the location of the remote repository, and replace
+         <code>
+          project-name
+         </code>
+         with the appropriate project name, like
+         <code>
+          ps0
+         </code>
+         .
+The result will be a new directory
+         <code>
+          project-name
+         </code>
+         with the contents of the repository.
+This is your local repository.
+        </p>
+        <p>
+         <strong>
+          Cloning problem sets
+         </strong>
+         : for each problem set in 6.005, you will have a Git repository.
+        </p>
+        <p>
+         Initially this remote repository only contains some template code.
+        </p>
+        <p>
+         To start working on the problem set, you will
+         <em>
+          clone
+         </em>
+         that repository onto your machine.
+        </p>
+        <p>
+         As you complete each part of the problem set, you will
+         <em>
+          commit
+         </em>
+         your changes to the local repository and then
+         <em>
+          push
+         </em>
+         them to the remote repository.
+        </p>
+        <p>
+         When the time comes for grading your assignment, we will clone the remote repository and look at the last commit you made
+         <em>
+          and pushed there
+         </em>
+         before the deadline.
+        </p>
+       </div>
+       <h3 id="getting_the_history_of_the_repository">
+        Getting the history of the repository
+       </h3>
+       <div data-outline="getting_the_history_of_the_repository">
+        <p>
+         After you have cloned a repository, you should navigate into the repository on your command prompt using
+         <code>
+          cd
+         </code>
+         .
+This lets you run
+         <code>
+          git
+         </code>
+         commands on the repository.
+        </p>
+        <p>
+         For example, you can see the last commit on the repository using
+         <code>
+          git show
+         </code>
+         .
+This will show you the commit message as well as all the modifications.
+        </p>
+        <p>
+         You can see the list of all the commits in the repository (with their commit messages) using
+         <code>
+          git log
+         </code>
+         .
+        </p>
+        <p>
+         <strong>
+          Long output
+         </strong>
+         : if
+         <code>
+          git show
+         </code>
+         or
+         <code>
+          git log
+         </code>
+         generate more output than fits on one page, you will see a colon (
+         <code>
+          :
+         </code>
+         ) symbol at the bottom of the screen.
+You will not be able to type another command!
+Use the arrow keys to scroll up and down, and quit the output viewer by pressing
+         <code>
+          q
+         </code>
+         .
+        </p>
+        <p>
+         <strong>
+          Commit IDs
+         </strong>
+         : every Git commit has a unique ID, the hexadecimal numbers you see in
+         <code>
+          git log
+         </code>
+         or
+         <code>
+          git show
+         </code>
+         .
+The commit ID is a unique cryptographic hash of the contents of that commit.
+Every commit, not just within your repository but within the
+         <em>
+          universe
+         </em>
+         of all Git repositories, has a unique ID (with extremely high probability).
+        </p>
+        <p>
+         You can reference a commit by its ID (usually just by the first few characters).
+This is useful with a command like
+         <code>
+          git show
+         </code>
+         , where you can look at a particular commit rather than only the most recent one.
+        </p>
+       </div>
+       <h3 id="creating_a_commit">
+        Creating a commit
+       </h3>
+       <div data-outline="creating_a_commit">
+        <p>
+         The basic building block of data in Git is called a “commit”.
+A commit represents some change to one or more files (or the creation of one or more files).
+        </p>
+        <p>
+         When you change a file or create a new file, that change is not part of the repository.
+Adding it takes two steps.
+First, run:
+        </p>
+        <p>
+         <code>
+          git add file.txt
+         </code>
+         (where
+         <code>
+          file.txt
+         </code>
+         is the file you want to add)
+        </p>
+        <p>
+         You’ll either need to run that command from the same directory as the file, or include directory names in the file path.
+        </p>
+        <p>
+         This
+         <em>
+          stages
+         </em>
+         the file.
+Second, once you’ve staged all your changes, run:
+        </p>
+        <p>
+         <code>
+          git commit
+         </code>
+        </p>
+        <p>
+         This will pop up the editor for your
+         <em>
+          commit message
+         </em>
+         .
+When you save and close the editor, the commit will be created.
+        </p>
+       </div>
+       <h3 id="getting_the_status_of_your_repository">
+        Getting the status of your repository
+       </h3>
+       <div data-outline="getting_the_status_of_your_repository">
+        <p>
+         Git has some nice commands for seeing the status of your repository.
+        </p>
+        <p>
+         The most important of these is
+         <code>
+          git status
+         </code>
+         .
+Run it any time to see which files Git sees have been modified and are still unstaged and which files have been modified and staged (so that if you
+         <code>
+          git commit
+         </code>
+         those changes will be included in the commit).
+Note that the same file might have both staged and unstaged changes, if you changed the file more after running
+         <code>
+          git add
+         </code>
+         .
+        </p>
+        <p>
+         When you have unstaged changes, you can see what the changes were (relative to the last commit) by running
+         <code>
+          git diff
+         </code>
+         .
+Note that this will
+         <em>
+          not
+         </em>
+         include changes that were staged (but not committed).
+You can see those by running
+         <code>
+          git diff --staged
+         </code>
+         .
+        </p>
+       </div>
+       <h3 id="pushing">
+        Pushing
+       </h3>
+       <div data-outline="pushing">
+        <p>
+         After you’ve made some commits, you’ll want to push them to a remote repository.
+In 6.005, you should have only one remote repository to push to, called
+         <code>
+          origin
+         </code>
+         .
+To push to it, you run the command:
+        </p>
+        <p>
+         <code>
+          git push origin master
+         </code>
+        </p>
+        <p>
+         The
+         <code>
+          origin
+         </code>
+         in the command specifies that you’re pushing to the
+         <code>
+          origin
+         </code>
+         remote.
+By convention, that’s the remote repository you cloned from.
+        </p>
+        <p>
+         The
+         <code>
+          master
+         </code>
+         refers to the
+         <code>
+          master
+         </code>
+         branch.
+We won’t use branches in 6.005.
+         <code>
+          master
+         </code>
+         is Git’s default branch name, so all our commits will be on
+         <code>
+          master
+         </code>
+         , and that’s the branch we want to push.
+        </p>
+        <p>
+         Once you run this, you will be prompted for your password and hopefully everything will push.
+You’ll get a line like this:
+        </p>
+        <pre><code>a67cc45..b4db9b0  master -&gt; master
+</code></pre>
+
+       </div>
+       <h3 id="merges">
+        Merges
+       </h3>
+       <div data-outline="merges">
+        <p>
+         Sometimes, when you try to push, things will go wrong.
+You might get an output like this:
+        </p>
+        <pre><code>! [rejected]      master -&gt; master (non-fast-forward)
+</code></pre>
+        <p>
+         What’s going on here is that Git won’t let you push to a repository unless all your commits come after all the ones already in your remote repository.
+If you get an error message like that, it means that there is a commit in your remote repository that you don’t have in your local one (on a project, probably because a teammate pushed before you did).
+If you find yourself in this situation, you have to pull first and then push.
+        </p>
+       </div>
+       <h3 id="pulling">
+        Pulling
+       </h3>
+       <div data-outline="pulling">
+        <p>
+         To perform a pull, you should run
+         <code>
+          git pull
+         </code>
+         .
+When you run this, Git actually does two things:
+        </p>
+        <ol>
+         <li>
+          <p>
+           It downloads the changes and stores them in its internal state.
+At this point, the repository doesn’t look any different, but it knows what the state of the remote repository is and what the state of your local repository is.
+          </p>
+         </li>
+         <li>
+          <p>
+           It incorporates the changes from the remote repository into the local repository by
+           <em>
+            merging
+           </em>
+           , described below.
+          </p>
+         </li>
+        </ol>
+       </div>
+       <h3 id="merging">
+        Merging
+       </h3>
+       <div data-outline="merging">
+        <p>
+         If you made some changes to your repository and you’re trying to incorporate the changes from another repository, you need to merge them together somehow.
+In terms of commits, what actually needs to happen is that you have to create a special
+         <em>
+          merge commit
+         </em>
+         that combines both changes.
+How this process actually happens depends on the changes.
+        </p>
+        <p>
+         If you’re lucky, then the changes you made and the changes that you downloaded from the remote repository don’t conflict.
+For example, maybe you changed one file and your project partner changed another.
+In this case, it’s safe to just include both changes.
+Similarly, maybe you changed different parts of the same file.
+In these cases, Git can do the merge automatically.
+When you run
+         <code>
+          git pull
+         </code>
+         , it will pop up an editor as if you were making a commit: this is the commit message of the merge commit that Git automatically generated.
+Once you save and close this editor, the merge commit will be made and you will have incorporated both changes.
+At this point, you can try to
+         <code>
+          git push
+         </code>
+         again.
+        </p>
+       </div>
+       <h3 id="merge_conflicts">
+        Merge conflicts
+       </h3>
+       <div data-outline="merge_conflicts">
+        <p>
+         Sometimes, you’re not so lucky.
+If the changes you made and the changes you pulled edit the same part of the same file, Git won’t know how to resolve it.
+This is called a
+         <em>
+          merge conflict
+         </em>
+         .
+In this case, you will get an output that says
+         <code>
+          CONFLICT
+         </code>
+         in big letters.
+If you run
+         <code>
+          git status
+         </code>
+         , it will show the conflicting files with the label
+         <code>
+          Both modified
+         </code>
+         .
+You now have to edit these files and resolve them by hand.
+        </p>
+        <p>
+         First, open the files in Eclipse.
+The parts that are conflicted will be really obviously marked with obnoxious
+         <code>
+          &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+         </code>
+         ,
+         <code>
+          ==================
+         </code>
+         , and
+         <code>
+          &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+         </code>
+         lines.
+Everything between the
+         <code>
+          &lt;&lt;&lt;&lt;
+         </code>
+         and the
+         <code>
+          ====
+         </code>
+         lines are the changes you made.
+Everything between the
+         <code>
+          ====
+         </code>
+         and the
+         <code>
+          &gt;&gt;&gt;&gt;
+         </code>
+         lines are the changes you pulled in.
+It’s your job to figure out how to combine these.
+The answer will of course depend on the situation.
+Maybe one change logically supercedes the other, or maybe they can be merged somehow.
+You should edit the file to your satisfaction and remove the
+         <code>
+          &lt;&lt;&lt;&lt;
+         </code>
+         /
+         <code>
+          ====
+         </code>
+         /
+         <code>
+          &gt;&gt;&gt;&gt;
+         </code>
+         markers when you’re done.
+        </p>
+        <p>
+         Once you have resolved all the conflicts (note that there can be several conflicting files, and also several conflicts per file),
+         <code>
+          git add
+         </code>
+         all the affected files and then
+         <code>
+          git commit
+         </code>
+         .
+You will have an opportunity to write the merge commit message (where you should describe how you did the merge).
+Now you should be able to push.
+        </p>
+
+        <div class="panel panel-default">
+         <div class="panel-body">
+          <p>
+           Avoid merges and merge conflicts:
+          </p>
+          <h3 id="pull_before_you_start_working">
+           <em>
+            Pull before you start working
+           </em>
+          </h3>
+          <div data-outline="pull_before_you_start_working">
+           <p>
+            Before you start working,
+            <strong>
+             always
+             <code>
+              git pull
+             </code>
+            </strong>
+            .
+That way, you’ll be working from the latest version of your code, and you’ll be less likely to have to perform a merge later.
+           </p>
+          </div>
+         </div>
+        </div>
+       </div>
+       <h3 id="reverting_to_previous_versions">
+        Reverting to previous versions
+       </h3>
+       <div data-outline="reverting_to_previous_versions">
+        <p>
+         If you’d like to practice using the version history to undo a change:
+        </p>
+        <hr>
+         <p>
+          We will revisit Git and learn more about version control in future classes.
+If you’ve installed the software, set up Eclipse, and completed the GitStream exercises above, you’re ready to move on to
+          <a href="../psets/ps0/index.html">
+           Problem Set 0
+          </a>
+          .
+         </p>
+        </hr>
+       </div>
+       <h3 id="have_fun_in_6005">
+        Have fun in 6.005!
+       </h3>
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <footer>
+   MIT EECS
+  </footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="../web/handout-run.js" type="text/javascript">
+  </script>
+ </body>
+
+<!-- Mirrored from ocw.mit.edu/ans7870/6/6.005/s16/getting-started/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 12 Dec 2025 10:36:30 GMT -->
+</html>
+<!-- Handout delivered Tue Feb 02 2016 11:09:15 GMT-0500 (EST) -->
