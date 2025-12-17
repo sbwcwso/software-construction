@@ -34,3 +34,6 @@
 [submodule "example/ex28-fromula"]
 	path = example/ex28-fromula
 	url = git@github.com:sbwcwso/sc-ex28-formula.git
+[submodule "ps/ps3"]
+	path = ps/ps3
+	url = git@github.com:sbwcwso/sc-ps3.git
