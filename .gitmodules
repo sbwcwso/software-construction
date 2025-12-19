@@ -37,3 +37,6 @@
 [submodule "ps/ps3"]
 	path = ps/ps3
 	url = git@github.com:sbwcwso/sc-ps3.git
+[submodule "ps/ps4"]
+	path = ps/ps4
+	url = git@github.com:sbwcwso/sc-ps4.git
