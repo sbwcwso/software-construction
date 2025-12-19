@@ -40,3 +40,6 @@
 [submodule "ps/ps4"]
 	path = ps/ps4
 	url = git@github.com:sbwcwso/sc-ps4.git
+[submodule "ABCMusicPlayer"]
+	path = ABCMusicPlayer
+	url = git@github.com:sbwcwso/sc-ABCMusicPlayer.git
